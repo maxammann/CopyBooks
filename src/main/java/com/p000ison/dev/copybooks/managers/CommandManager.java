@@ -44,13 +44,13 @@ public final class CommandManager
         return new ArrayList<Command>(commands.values());
     }
 
-    public boolean executeAll(final CommandSender sender, String command, String label, String[] args)
+    public boolean executeAll(final CommandSender sender, org.bukkit.command.Command command, String label, String[] args)
     {
         String[] arguments;
 
         //Build the args; if the args length is 0 then build if from the base command
         if (args.length == 0) {
-            arguments = new String[]{command};
+            arguments = new String[]{command.getName()};
         } else {
             arguments = args;
         }
@@ -77,7 +77,7 @@ public final class CommandManager
                         return true;
                     }
 
-
+                    cmd.execute(sender, label, realArgs);
                     return true;
                 }
             }

@@ -24,6 +24,13 @@ public abstract class GenericCommand implements Command
     private String[] identifiers;
     private String[] usages;
     private int maxArgs = 0, minArgs = 0;
+    protected CopyBooks plugin;
+
+    public GenericCommand(CopyBooks plugin, String name)
+    {
+        this.plugin = plugin;
+        this.name = name;
+    }
 
     @Override
     public abstract void execute(CommandSender sender, String label, String[] args);

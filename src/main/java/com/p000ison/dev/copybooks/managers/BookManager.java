@@ -23,6 +23,7 @@ public class BookManager
 {
 
     private CopyBooks plugin;
+   // private HashMap<Long, Book> books = new HashMap<Long, Book>();
 
     public BookManager(CopyBooks plugin)
     {
@@ -35,4 +36,6 @@ public class BookManager
         
         return item;
     }
+    
+
 }

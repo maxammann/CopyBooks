@@ -4,3 +4,4 @@ version: maven-version-number
 softdepend: []
 permissions:
 commands:
+  copybooks:

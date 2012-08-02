@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.debugging.Level;
 import java.util.logging.Level;
 import org.bukkit.ChatColor;
 
@@ -20,10 +19,11 @@ import org.bukkit.ChatColor;
  */
 public final class StorageManager
 {
-    
+
     private CopyBooks plugin;
     private DBCore core;
-    private PreparedStatement insertBook, updateBook, deleteBook, retrieveBooks;
+    private PreparedStatement insertBook, deleteBookByAuthor, deleteBookById,
+            deleteBookByTitle, updateBookById, updateBookByTitle;
 
     /**
      *
@@ -41,48 +41,52 @@ public final class StorageManager
      */
     public void initiateDB()
     {
-        if (plugin.getSettingsManager().isUseMysql()) {
-            core = new MySQLCore(plugin.getSettingsManager().getHost(), plugin.getSettingsManager().getDatabase(), plugin.getSettingsManager().getUsername(), plugin.getSettingsManager().getPassword());
-            
+        if (false) {
+            core = new MySQLCore("localhost", "mc_books", "root", "");
+
             if (core.checkConnection()) {
                 CopyBooks.debug("[CopyBooks] Connected successfully to MySQL Database");
-                
-                if (!core.existsTable("sc_clans")) {
-                    CopyBooks.debug("Creating table: sc_clans");
-                    
-                    String query = "CREATE TABLE IF NOT EXISTS `sc_clans` ( `id` bigint(20) NOT NULL auto_increment, `verified` tinyint(1) default '0', `tag` varchar(25) NOT NULL, `color_tag` varchar(25) NOT NULL, `name` varchar(100) NOT NULL, `friendly_fire` tinyint(1) default '0', `founded` bigint NOT NULL, `last_used` bigint NOT NULL, `packed_allies` text NOT NULL, `packed_rivals` text NOT NULL, `packed_bb` mediumtext NOT NULL, `cape_url` varchar(255) NOT NULL, `flags` text NOT NULL, `balance` double(64,2), PRIMARY KEY  (`id`), UNIQUE KEY `uq_CopyBooks_1` (`tag`));";
+
+                if (!core.existsTable("cb_books")) {
+                    CopyBooks.debug("Creating table: cb_books");
+
+                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` bigint(20) NOT NULL auto_increment, `title` varchar(25) NOT NULL, `pages` varchar(16) NOT NULL, `title` varchar(1000) NOT NULL, PRIMARY KEY  (`id`));";
                     core.execute(query);
                 }
-                
+
             } else {
-                CopyBooks.debug("[CopyBooks] " + ChatColor.RED + plugin.getLang("mysql.connection.failed"));
+                CopyBooks.debug("[CopyBooks] " + ChatColor.RED + plugin.getTranslation("mysql.connection.failed"));
             }
         } else {
-            
+
             CopyBooks.debug(Level.WARNING, "Using MySQL is highly recommended! (250x faster)");
             core = new SQLiteCore(plugin.getDataFolder().getPath());
-            
+
             if (core.checkConnection()) {
                 CopyBooks.debug("[CopyBooks] Connected successfully to SQLite Database");
-                
+
                 if (!core.existsTable("sc_clans")) {
                     CopyBooks.debug("Creating table: sc_clans");
-                    
-                    String query = "CREATE TABLE IF NOT EXISTS `sc_clans` ( `id` bigint(20), `verified` tinyint(1) default '0', `tag` varchar(25) NOT NULL, `color_tag` varchar(25) NOT NULL, `name` varchar(100) NOT NULL, `friendly_fire` tinyint(1) default '0', `founded` bigint NOT NULL, `last_used` bigint NOT NULL, `packed_allies` text NOT NULL, `packed_rivals` text NOT NULL, `packed_bb` mediumtext NOT NULL, `cape_url` varchar(255) NOT NULL, `flags` text NOT NULL, `balance` double(64,2) default 0.0,  PRIMARY KEY  (`id`), UNIQUE (`tag`));";
+
+                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` bigint(20), `title` varchar(25) NOT NULL, `author` varchar(16) NOT NULL, `pages` varchar(1000) NOT NULL, PRIMARY KEY  (`id`));";
                     core.execute(query);
                 }
-                
-                
             } else {
-                CopyBooks.debug("[CopyBooks] " + ChatColor.RED + plugin.getLang("sqlite.connection.failed"));
+                CopyBooks.debug("[CopyBooks] " + ChatColor.RED + plugin.getTranslation("sqlite.connection.failed"));
             }
         }
         prepareStatements();
     }
-    
+
     public void prepareStatements()
     {
         //prepare here
+        insertBook = core.prepareStatement("INSERT INTO `cb_books` ( title, author, pages ) VALUES ( ?, ?, ? );");
+        updateBookByTitle = core.prepareStatement("UPDATE `cb_books` SET title = ?, author = ?, pages = ? WHERE title = ?;");
+        updateBookById = core.prepareStatement("UPDATE `cb_books` SET title = ?, author = ?, pages = ? WHERE id = ?;");
+        deleteBookByTitle = core.prepareStatement("DELETE FROM `cb_books` WHERE title = ?;");
+        deleteBookById = core.prepareStatement("DELETE FROM `cb_books` WHERE id = ?;");
+        deleteBookByAuthor = core.prepareStatement("DELETE FROM `cb_books` WHERE author = ?;");
     }
 
     /**
@@ -98,21 +102,57 @@ public final class StorageManager
      */
     public void importFromDatabase()
     {
+//        Set<Book> books = retrieveBooks();
+//        for (Book book : books) {
+//            plugin.getBookManager().addBook(book.getId(), book);
+//        }
     }
-    
-    public Set<Book> retrieveClans()
+
+    public void updateBookByTitle(Book book)
+    {
+        try {
+            updateBookByTitle.setString(1, book.getTitle());
+            updateBookByTitle.setString(2, book.getAuthor());
+            updateBookByTitle.setString(3, Helper.fromListToJSONString("pages", book.getPages()));
+            updateBookByTitle.setString(4, book.getTitle());
+            updateBookByTitle.executeUpdate();
+        } catch (SQLException ex) {
+            CopyBooks.debug("Failed updating book!", ex);
+        }
+    }
+
+    public void insertBook(Book book)
+    {
+        try {
+            insertBook.setString(1, book.getTitle());
+            insertBook.setString(2, book.getAuthor());
+            insertBook.setString(3, "");
+            insertBook.executeUpdate();
+        } catch (SQLException ex) {
+            CopyBooks.debug("Failed inserting book!", ex);
+        }
+    }
+
+    public Set<Book> retrieveBooks(int min, int max)
     {
         Set<Book> out = new HashSet<Book>();
-        
-        String query = "SELECT * FROM  `cb_books`;";
+
+        String query = "SELECT * FROM  `cb_books` LIMIT " + min + ", " + max + ";";
+
+        //      Calendar calendar = Calendar.getInstance();
+        //     calendar.add(Calendar.WEEK_OF_YEAR, -2);
+        //  Date twoWeeksBefore = calendar.getTime();
+
         ResultSet res = core.select(query);
-        
+
         if (res != null) {
             try {
                 while (res.next()) {
                     try {
+                        //   if (res.getTimestamp("insert_date").after(twoWeeksBefore)) {
                         Book book = new Book(res.getString("page"), res.getString("author"), Helper.fromJSONStringtoList("pages", res.getString("pages")));
                         out.add(book);
+                        //         }
                     } catch (Exception ex) {
                         CopyBooks.debug(null, ex);
                     }
@@ -121,10 +161,10 @@ public final class StorageManager
                 CopyBooks.debug(String.format("An Error occurred: %s", ex.getErrorCode()), ex);
             }
         }
-        
+
         return out;
     }
-    
+
     private void updateDatabase()
     {
     }

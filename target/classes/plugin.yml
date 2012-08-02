@@ -4,3 +4,4 @@ version: 1.0-bUNKNOWN
 softdepend: []
 permissions:
 commands:
+  copybooks:
