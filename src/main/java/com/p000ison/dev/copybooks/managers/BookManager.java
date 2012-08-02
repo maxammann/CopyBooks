@@ -11,6 +11,9 @@
 package com.p000ison.dev.copybooks.managers;
 
 import com.p000ison.dev.copybooks.CopyBooks;
+import java.util.ArrayList;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -25,27 +28,11 @@ public class BookManager
     {
         this.plugin = plugin;
     }
-//Basic code to get the title of a book
-//    public static void main(String[] args)
-//    {
-//        ItemStack i = new ItemStack(0, 5, (short) 5, (byte) 15);
-//
-//        ((CraftItemStack) i).getHandle().getTag();
-//
-//        File file = new File("test");
-//        if (!file.exists()) {
-//            try {
-//                file.createNewFile();
-//            } catch (IOException ex) {
-//                Logger.getLogger(BookManager.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-//        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-//        config.set("test", i);
-//        try {
-//            config.save(file);
-//        } catch (IOException ex) {
-//            Logger.getLogger(BookManager.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
+    public ItemStack createBook(String title, String author, ArrayList<String> pages) {
+        ItemStack item = new ItemStack(Material.AIR);
+    //    item.set....
+        
+        
+        return item;
+    }
 }

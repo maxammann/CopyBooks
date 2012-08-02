@@ -11,7 +11,6 @@
 package com.p000ison.dev.copybooks.listeners;
 
 import com.p000ison.dev.copybooks.CopyBooks;
-import net.minecraft.server.NBTBase;
 import net.minecraft.server.NBTTagList;
 import net.minecraft.server.NBTTagString;
 import org.bukkit.block.Block;

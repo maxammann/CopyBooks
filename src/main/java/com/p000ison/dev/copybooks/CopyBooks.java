@@ -11,6 +11,8 @@
 package com.p000ison.dev.copybooks;
 
 import com.p000ison.dev.copybooks.listeners.CBPlayerListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,11 +23,36 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class CopyBooks extends JavaPlugin
 {
 
+    private static Logger logger;
+
+    public static void debug(String msg, Throwable ex)
+    {
+        if (logger != null) {
+            logger.log(Level.SEVERE, msg, ex);
+        }
+    }
+
+    public static void debug(String msg)
+    {
+        if (logger != null) {
+            logger.log(Level.INFO, msg);
+        }
+    }
+
+    public static void debug(Level level, String msg)
+    {
+        if (logger != null) {
+            logger.log(level, msg);
+        }
+    }
+
     @Override
     public void onEnable()
     {
+        logger = getLogger();
+
         PluginManager pm = getServer().getPluginManager();
-        
+
         pm.registerEvents(new CBPlayerListener(this), this);
         super.onEnable();
     }
