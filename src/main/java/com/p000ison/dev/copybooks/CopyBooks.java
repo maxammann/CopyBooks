@@ -10,6 +10,8 @@
  */
 package com.p000ison.dev.copybooks;
 
+import com.p000ison.dev.copybooks.listeners.CBPlayerListener;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -18,4 +20,13 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class CopyBooks extends JavaPlugin
 {
+
+    @Override
+    public void onEnable()
+    {
+        PluginManager pm = getServer().getPluginManager();
+        
+        pm.registerEvents(new CBPlayerListener(this), this);
+        super.onEnable();
+    }
 }
