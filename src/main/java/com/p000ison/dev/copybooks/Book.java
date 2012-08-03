@@ -19,15 +19,22 @@ import java.util.ArrayList;
 public class Book
 {
 
+    private long id;
     private String title;
     private String author;
     private ArrayList<String> pages;
 
-    public Book(String title, String author, ArrayList<String> pages)
+    public Book(long id, String title, String author, ArrayList<String> pages)
     {
+        this.id = id;
         this.title = title;
         this.author = author;
         this.pages = pages;
+    }
+
+    public long getId()
+    {
+        return id;
     }
 
     public String getTitle()

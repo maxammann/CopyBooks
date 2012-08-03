@@ -55,9 +55,7 @@ public class CopyBookCommand extends GenericCommand
 
             pages.add("Im a page!");
 
-            Book book = new Book("Im a title!", "Im the author!", pages);
-
-            plugin.getStorageManager().insertBook(book);
+            plugin.getStorageManager().insertBook("Im a title!", "Im the author!", pages);
 
         } else {
             sender.sendMessage(plugin.getTranslation("only.player"));

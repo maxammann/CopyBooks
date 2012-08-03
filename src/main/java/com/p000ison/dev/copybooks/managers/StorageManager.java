@@ -9,8 +9,8 @@ import com.p000ison.dev.copybooks.storage.SQLiteCore;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import org.bukkit.ChatColor;
 
@@ -68,7 +68,7 @@ public final class StorageManager
                 if (!core.existsTable("sc_clans")) {
                     CopyBooks.debug("Creating table: sc_clans");
 
-                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` bigint(20), `title` varchar(25) NOT NULL, `author` varchar(16) NOT NULL, `pages` varchar(1000) NOT NULL, PRIMARY KEY  (`id`));";
+                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` INTEGER, `title` varchar(25) NOT NULL, `author` varchar(16) NOT NULL, `pages` varchar(1000) NOT NULL, `created`  PRIMARY KEY  (`id`));";
                     core.execute(query);
                 }
             } else {
@@ -108,34 +108,72 @@ public final class StorageManager
 //        }
     }
 
-    public void updateBookByTitle(Book book)
+    public void updateBookByTitle(String title, Book book)
     {
         try {
             updateBookByTitle.setString(1, book.getTitle());
             updateBookByTitle.setString(2, book.getAuthor());
             updateBookByTitle.setString(3, Helper.fromListToJSONString("pages", book.getPages()));
-            updateBookByTitle.setString(4, book.getTitle());
+            updateBookByTitle.setString(4, title);
             updateBookByTitle.executeUpdate();
         } catch (SQLException ex) {
             CopyBooks.debug("Failed updating book!", ex);
         }
     }
 
-    public void insertBook(Book book)
+    public void updateBookById(long id, Book book)
     {
         try {
-            insertBook.setString(1, book.getTitle());
-            insertBook.setString(2, book.getAuthor());
-            insertBook.setString(3, "");
+            updateBookByTitle.setString(1, book.getTitle());
+            updateBookByTitle.setString(2, book.getAuthor());
+            updateBookByTitle.setString(3, Helper.fromListToJSONString("pages", book.getPages()));
+            updateBookByTitle.setLong(4, id);
+            updateBookByTitle.executeUpdate();
+        } catch (SQLException ex) {
+            CopyBooks.debug("Failed updating book!", ex);
+        }
+    }
+
+    public void insertBook(String title, String author, List<String> pages)
+    {
+        try {
+            insertBook.setString(1, title);
+            insertBook.setString(2, author);
+            insertBook.setString(3, Helper.fromListToJSONString("pages", pages));
             insertBook.executeUpdate();
         } catch (SQLException ex) {
             CopyBooks.debug("Failed inserting book!", ex);
         }
     }
 
-    public Set<Book> retrieveBooks(int min, int max)
+    public Book retrieveBook(long id)
     {
-        Set<Book> out = new HashSet<Book>();
+
+        String query = "SELECT * FROM `cb_books` WHERE id = " + id + ";";
+
+
+        ResultSet res = core.select(query);
+
+        if (res != null) {
+            try {
+                while (res.next()) {
+                    try {
+                        return new Book(res.getLong("id"), res.getString("page"), res.getString("author"), Helper.fromJSONStringtoList("pages", res.getString("pages")));
+                    } catch (Exception ex) {
+                        CopyBooks.debug(null, ex);
+                    }
+                }
+            } catch (SQLException ex) {
+                CopyBooks.debug(String.format("An Error occurred: %s", ex.getErrorCode()), ex);
+            }
+        }
+
+        return null;
+    }
+
+    public List<Book> retrieveBooks(int min, int max)
+    {
+        List<Book> out = new ArrayList<Book>();
 
         String query = "SELECT * FROM  `cb_books` LIMIT " + min + ", " + max + ";";
 
@@ -144,13 +182,15 @@ public final class StorageManager
         //  Date twoWeeksBefore = calendar.getTime();
 
         ResultSet res = core.select(query);
+        
+        
 
         if (res != null) {
             try {
                 while (res.next()) {
                     try {
                         //   if (res.getTimestamp("insert_date").after(twoWeeksBefore)) {
-                        Book book = new Book(res.getString("page"), res.getString("author"), Helper.fromJSONStringtoList("pages", res.getString("pages")));
+                        Book book = new Book(res.getLong("id"), res.getString("title"), res.getString("author"), Helper.fromJSONStringtoList("pages", res.getString("pages")));
                         out.add(book);
                         //         }
                     } catch (Exception ex) {

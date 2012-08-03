@@ -11,6 +11,7 @@
 package com.p000ison.dev.copybooks;
 
 import com.p000ison.dev.copybooks.commands.CopyBookCommand;
+import com.p000ison.dev.copybooks.commands.ListCommand;
 import com.p000ison.dev.copybooks.listeners.CBPlayerListener;
 import com.p000ison.dev.copybooks.managers.BookManager;
 import com.p000ison.dev.copybooks.managers.CommandManager;
@@ -80,6 +81,7 @@ public class CopyBooks extends JavaPlugin
         
         commandManager = new CommandManager(this);
         commandManager.addCommand(new CopyBookCommand(this, "Copy"));
+        commandManager.addCommand(new ListCommand(this, "List"));
     }
 
     @Override
