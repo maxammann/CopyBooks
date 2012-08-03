@@ -10,29 +10,28 @@
  */
 package com.p000ison.dev.copybooks.commands;
 
-import com.p000ison.dev.copybooks.Book;
 import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.GenericCommand;
-
-import java.util.ArrayList;
-
+import net.minecraft.server.Item;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+
 /**
  * @author Max
  */
-public class CopyBookCommand extends GenericCommand {
+public class CreateBookCommand extends GenericCommand {
 
-    public CopyBookCommand(CopyBooks plugin, String name)
+    public CreateBookCommand(CopyBooks plugin, String name)
     {
         super(plugin, name);
-        setPermissions("cb.command.copy");
-        setUsages("/cb copy - Copy a book");
-        setArgumentRange(0, 0);
-        setIdentifiers("copy");
+        setPermissions("cb.command.create");
+        setUsages("/cb create - Creates a book from a id");
+        setArgumentRange(1, 2);
+        setIdentifiers("create", "c");
     }
 
     @Override
@@ -46,14 +45,23 @@ public class CopyBookCommand extends GenericCommand {
                 return;
             }
 
-            if (!item.getType().equals(Material.BOOK_AND_QUILL)) {
-                return;
+            int amount = 1;
+
+            if (args.length == 2) {
+                amount = Integer.parseInt(args[1]);
             }
 
-            Book book = new Book(item);
-            plugin.getStorageManager().insertBook(book);
+            int id = Integer.parseInt(args[0]);
+            ItemStack book = plugin.getBookManager().getBookById(id, amount);
 
-            sender.sendMessage(String.format("You copied the book %s from %s", book.getTitle(), book.getAuthor()));
+            if (book == null) {
+                sender.sendMessage("Book not found!");
+                return;
+            }
+            player.getInventory().addItem(plugin.getBookManager().getBookById(id, amount));
+            player.updateInventory();
+
+            sender.sendMessage(String.format("You got %s book with the id %s", amount, id));
         } else {
             sender.sendMessage(plugin.getTranslation("only.player"));
         }

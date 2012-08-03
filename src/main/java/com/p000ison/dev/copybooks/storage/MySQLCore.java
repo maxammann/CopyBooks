@@ -1,13 +1,13 @@
 package com.p000ison.dev.copybooks.storage;
 
 import com.p000ison.dev.copybooks.CopyBooks;
+
 import java.sql.*;
 
 /**
  * @author cc_madelg
  */
-public class MySQLCore implements DBCore
-{
+public class MySQLCore implements DBCore {
 
     private Connection connection;
     private String host;
@@ -75,7 +75,7 @@ public class MySQLCore implements DBCore
         try {
             return connection.prepareStatement(statement);
         } catch (SQLException ex) {
-           CopyBooks.debug("Error at creating the statement: " + statement + "(" + ex.getMessage() + ")");
+            CopyBooks.debug("Error at creating the statement: " + statement + "(" + ex.getMessage() + ")");
         }
         return null;
     }

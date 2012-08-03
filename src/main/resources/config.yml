@@ -1,0 +1,4 @@
+groups:
+  Admin: 1
+  default: 2
+  Member: 3

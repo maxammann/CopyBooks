@@ -11,11 +11,9 @@
 package com.p000ison.dev.copybooks;
 
 /**
- *
  * @author Max
  */
-public interface Command
-{
+public interface Command {
 
     public void execute(org.bukkit.command.CommandSender sender, String label, String[] args);
 

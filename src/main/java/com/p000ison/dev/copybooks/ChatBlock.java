@@ -6,16 +6,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.ChatPaginator;
 
 /**
- *
  * @author phaed
  */
-public class ChatBlock
-{
+public class ChatBlock {
 
     private static final int lineLength = 319;
     private ArrayList<Boolean> columnFlexes = new ArrayList<Boolean>();
@@ -25,7 +24,6 @@ public class ChatBlock
     private String color = "";
 
     /**
-     *
      * @param columnAlignment
      */
     public void setAlignment(String... columnAlignment)
@@ -34,7 +32,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @param columnFlex
      */
     public void setFlexibility(boolean... columnFlex)
@@ -45,7 +42,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @param columnPercentages
      * @param prefix
      */
@@ -63,7 +59,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @return
      */
     public boolean hasContent()
@@ -72,7 +67,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @param contents
      */
     public void addRow(String... contents)
@@ -81,7 +75,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @return
      */
     public int size()
@@ -90,7 +83,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @return
      */
     public boolean isEmpty()
@@ -107,7 +99,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @param player
      * @return
      */
@@ -117,7 +108,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @param player
      * @param prefix
      * @return
@@ -128,7 +118,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @param player
      * @param amount
      * @return
@@ -139,7 +128,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @param player
      * @param prefix
      * @param amount
@@ -303,7 +291,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @param col
      * @return
      */
@@ -319,7 +306,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @param msg
      * @return
      */
@@ -329,7 +315,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @param msg
      * @param lineLength
      * @return
@@ -360,7 +345,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @param str
      * @return
      */
@@ -374,7 +358,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @param msg
      * @param length
      * @return
@@ -393,7 +376,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @param msg
      * @param length
      * @return
@@ -476,7 +458,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @param str
      * @return
      */
@@ -576,9 +557,6 @@ public class ChatBlock
     }
 
     /**
-     *
-     *
-     *
      * @param string
      * @return
      */
@@ -702,7 +680,6 @@ public class ChatBlock
     }
 
     /**
-     *
      * @param message
      * @return
      */
@@ -712,20 +689,17 @@ public class ChatBlock
     }
 
     /**
-     *
      * @param message
      * @return
      */
     public static String colorize(String message)
     {
         return colorizeBase((new String[]{
-                    message
-                }))[0];
+                message
+        }))[0];
     }
 
     /**
-     *
-     *
      * @param message
      * @return
      */

@@ -14,68 +14,32 @@ import com.p000ison.dev.copybooks.Book;
 import com.p000ison.dev.copybooks.ChatBlock;
 import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.GenericCommand;
+
 import java.util.List;
+
 import org.bukkit.command.CommandSender;
 
 /**
- *
  * @author Max
  */
-public class RemoveBookCommand extends GenericCommand
-{
-
-    private final int MAX_BOOKS_PER_PAGE = 9;
+public class RemoveBookCommand extends GenericCommand {
 
     public RemoveBookCommand(CopyBooks plugin, String name)
     {
         super(plugin, name);
-        setPermissions("cb.command.list");
-        setUsages("/cb list - Lists all books");
-        setArgumentRange(0, 1);
-        setIdentifiers("list");
+        setPermissions("cb.command.remove");
+        setUsages("/cb remove [id] - Removes a book");
+        setArgumentRange(1, 1);
+        setIdentifiers("remove", "rm");
     }
 
     @Override
     public void execute(CommandSender sender, String label, String[] args)
     {
-        int multiplier = 1;
-
-        if (args.length == 1) {
-            multiplier = Integer.parseInt(args[0]);
-        }
-
-        List<Book> books = plugin.getStorageManager().retrieveBooks((multiplier - 1) * MAX_BOOKS_PER_PAGE, multiplier * MAX_BOOKS_PER_PAGE);
-        if (books != null) {
-
-            ChatBlock chatBlock = new ChatBlock();
-            ChatBlock.sendBlank(sender);
-            ChatBlock.saySingle(sender, "List");
-            ChatBlock.sendBlank(sender);
-
-            ChatBlock.sendBlank(sender);
-
-            chatBlock.setFlexibility(true, false, false);
-            chatBlock.setAlignment("l", "c", "c");
-
-            chatBlock.addRow("  " + "ID", "Title", "Author");
-
-
-
-            for (Book book : books) {
-
-                if (book != null) {
-                    String id = String.valueOf(book.getId());
-                    String title = book.getTitle();
-                    String author = book.getAuthor();
-
-                    chatBlock.addRow("  " + id, title, author);
-                }
-            }
-            
-            chatBlock.sendBlock(sender, MAX_BOOKS_PER_PAGE);
-
+        if (plugin.getStorageManager().deleteBookById(Long.parseLong(args[0]))) {
+            sender.sendMessage("Book deleted!");
         } else {
-            sender.sendMessage("not enough books");
+            sender.sendMessage("Book could not be deleted!");
         }
     }
 }

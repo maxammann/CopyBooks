@@ -10,32 +10,38 @@
  */
 package com.p000ison.dev.copybooks;
 
-import com.p000ison.dev.copybooks.commands.CopyBookCommand;
-import com.p000ison.dev.copybooks.commands.ListCommand;
+import com.p000ison.dev.copybooks.commands.*;
 import com.p000ison.dev.copybooks.listeners.CBPlayerListener;
 import com.p000ison.dev.copybooks.managers.BookManager;
 import com.p000ison.dev.copybooks.managers.CommandManager;
+import com.p000ison.dev.copybooks.managers.SettingsManager;
 import com.p000ison.dev.copybooks.managers.StorageManager;
+
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- *
  * @author Max
  */
-public class CopyBooks extends JavaPlugin
-{
+public class CopyBooks extends JavaPlugin {
 
     private static Logger logger;
     private ResourceBundle language;
     private CommandManager commandManager;
     private StorageManager storageManager;
     private BookManager bookManager;
+    private SettingsManager settingsManager;
+    public static Permission permission = null;
+    public static Economy economy = null;
 
     public static void debug(String msg, Throwable ex)
     {
@@ -75,13 +81,52 @@ public class CopyBooks extends JavaPlugin
 
     private void setupManagers()
     {
+        settingsManager = new SettingsManager(this);
         commandManager = new CommandManager(this);
         bookManager = new BookManager(this);
         storageManager = new StorageManager(this);
-        
+        setupPermissions();
+        setupEconomy();
+
+
         commandManager = new CommandManager(this);
         commandManager.addCommand(new CopyBookCommand(this, "Copy"));
         commandManager.addCommand(new ListCommand(this, "List"));
+        commandManager.addCommand(new CreateBookCommand(this, "Create"));
+        commandManager.addCommand(new UnsignBookCommand(this, "Unsign"));
+        commandManager.addCommand(new RemoveBookCommand(this, "Remove"));
+    }
+
+
+    private boolean setupPermissions()
+    {
+        RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+        if (permissionProvider != null) {
+            permission = permissionProvider.getProvider();
+        }
+        return (permission != null);
+    }
+
+
+    private boolean setupEconomy()
+    {
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        if (economyProvider != null) {
+            economy = economyProvider.getProvider();
+        }
+
+        return (economy != null);
+    }
+
+    public SettingsManager getSettingsManager()
+    {
+        return settingsManager;
+    }
+
+
+    public Permission getPermissions()
+    {
+        return permission;
     }
 
     @Override
@@ -89,10 +134,8 @@ public class CopyBooks extends JavaPlugin
     {
         commandManager.executeAll(sender, command, label, args);
         return true;
-        
+
     }
-    
-    
 
     @Override
     public void onDisable()

@@ -10,14 +10,20 @@
  */
 package com.p000ison.dev.copybooks;
 
+import net.minecraft.server.NBTTagCompound;
+import net.minecraft.server.NBTTagList;
+import net.minecraft.server.NBTTagString;
+import org.bukkit.Material;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.inventory.ItemStack;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- *
  * @author Max
  */
-public class Book
-{
+public class Book {
 
     private long id;
     private String title;
@@ -31,6 +37,35 @@ public class Book
         this.author = author;
         this.pages = pages;
     }
+
+    public Book(String title, String author, ArrayList<String> pages)
+    {
+        this(0, title, author, pages);
+    }
+
+    public Book(ItemStack item)
+    {
+        NBTTagCompound tag = ((CraftItemStack) (item)).getHandle().tag;
+
+        if (tag == null) {
+            tag = new NBTTagCompound();
+        }
+
+        String author = tag.getString("author");
+        String title = tag.getString("title");
+
+        NBTTagList pages = tag.getList("pages");
+        ArrayList<String> realPages = new ArrayList<String>();
+
+        for (int i = 0; i < pages.size(); i++) {
+            realPages.add(pages.get(i).getName());
+        }
+
+        this.title = title;
+        this.author = author;
+        this.pages = realPages;
+    }
+
 
     public long getId()
     {
@@ -50,5 +85,28 @@ public class Book
     public ArrayList<String> getPages()
     {
         return pages;
+    }
+
+    public ItemStack toItemStack(int amount)
+    {
+        CraftItemStack item = new CraftItemStack(Material.WRITTEN_BOOK);
+        NBTTagCompound newBookData = new NBTTagCompound();
+
+        newBookData.setString("author", this.getAuthor());
+        newBookData.setString("title", this.getTitle());
+
+        NBTTagList pages = new NBTTagList();
+
+        List<String> bookPages = this.getPages();
+
+        for (int i = 0; i < bookPages.size(); i++) {
+            pages.add(new NBTTagString(String.valueOf(i), bookPages.get(i)));
+        }
+
+        newBookData.set("pages", pages);
+
+        item.getHandle().tag = newBookData;
+
+        return (ItemStack) item;
     }
 }

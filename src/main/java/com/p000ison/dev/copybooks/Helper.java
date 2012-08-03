@@ -12,16 +12,15 @@ package com.p000ison.dev.copybooks;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 /**
- *
  * @author Max
  */
-public class Helper
-{
+public class Helper {
 
     public static String fromListToJSONString(String key, List<String> list)
     {

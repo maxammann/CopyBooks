@@ -14,15 +14,16 @@ import com.p000ison.dev.copybooks.Book;
 import com.p000ison.dev.copybooks.ChatBlock;
 import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.GenericCommand;
+
 import java.util.List;
+
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
- *
  * @author Max
  */
-public class ListCommand extends GenericCommand
-{
+public class ListCommand extends GenericCommand {
 
     private final int MAX_BOOKS_PER_PAGE = 9;
 
@@ -57,9 +58,8 @@ public class ListCommand extends GenericCommand
             chatBlock.setFlexibility(true, false, false);
             chatBlock.setAlignment("l", "c", "c");
 
-            chatBlock.addRow("  " + "ID", "Title", "Author");
-
-
+            chatBlock.addRow(ChatColor.AQUA + "  " + "ID", "Title", "Author");
+            chatBlock.addRow();
 
             for (Book book : books) {
 
@@ -68,11 +68,11 @@ public class ListCommand extends GenericCommand
                     String title = book.getTitle();
                     String author = book.getAuthor();
 
-                    chatBlock.addRow("  " + id, title, author);
+                    chatBlock.addRow(ChatColor.GRAY + "  " + id, title, author);
                 }
             }
-            
-            chatBlock.sendBlock(sender, MAX_BOOKS_PER_PAGE);
+
+            chatBlock.sendBlock(sender, MAX_BOOKS_PER_PAGE + 3);
 
         } else {
             sender.sendMessage("not enough books");

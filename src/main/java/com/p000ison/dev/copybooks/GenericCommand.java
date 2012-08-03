@@ -13,11 +13,9 @@ package com.p000ison.dev.copybooks;
 import org.bukkit.command.CommandSender;
 
 /**
- *
  * @author Max
  */
-public abstract class GenericCommand implements Command
-{
+public abstract class GenericCommand implements Command {
 
     private String name;
     private String[] permissions;

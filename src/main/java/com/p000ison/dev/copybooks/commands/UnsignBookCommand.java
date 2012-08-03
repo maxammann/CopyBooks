@@ -13,9 +13,6 @@ package com.p000ison.dev.copybooks.commands;
 import com.p000ison.dev.copybooks.Book;
 import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.GenericCommand;
-
-import java.util.ArrayList;
-
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,15 +21,15 @@ import org.bukkit.inventory.ItemStack;
 /**
  * @author Max
  */
-public class CopyBookCommand extends GenericCommand {
+public class UnsignBookCommand extends GenericCommand {
 
-    public CopyBookCommand(CopyBooks plugin, String name)
+    public UnsignBookCommand(CopyBooks plugin, String name)
     {
         super(plugin, name);
-        setPermissions("cb.command.copy");
-        setUsages("/cb copy - Copy a book");
+        setPermissions("cb.command.unsign");
+        setUsages("/cb unsign - Unsings a book");
         setArgumentRange(0, 0);
-        setIdentifiers("copy");
+        setIdentifiers("unsign", "us");
     }
 
     @Override
@@ -43,17 +40,18 @@ public class CopyBookCommand extends GenericCommand {
             ItemStack item = player.getItemInHand();
 
             if (item == null) {
+                player.sendMessage("You have to hold a written book in your hands!");
                 return;
             }
 
-            if (!item.getType().equals(Material.BOOK_AND_QUILL)) {
+            if (!item.getType().equals(Material.WRITTEN_BOOK)) {
+                player.sendMessage("You have to hold a written book in your hands!");
                 return;
             }
 
-            Book book = new Book(item);
-            plugin.getStorageManager().insertBook(book);
+            plugin.getBookManager().unsignBook(item);
 
-            sender.sendMessage(String.format("You copied the book %s from %s", book.getTitle(), book.getAuthor()));
+            sender.sendMessage(String.format("You unsigned the book!"));
         } else {
             sender.sendMessage(plugin.getTranslation("only.player"));
         }

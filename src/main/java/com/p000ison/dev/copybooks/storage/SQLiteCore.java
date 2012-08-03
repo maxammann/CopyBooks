@@ -1,15 +1,14 @@
 package com.p000ison.dev.copybooks.storage;
 
 import com.p000ison.dev.copybooks.CopyBooks;
+
 import java.io.File;
 import java.sql.*;
 
 /**
- *
  * @author cc_madelg
  */
-public class SQLiteCore implements DBCore
-{
+public class SQLiteCore implements DBCore {
 
     private Connection connection;
     private String dbLocation;
@@ -17,7 +16,6 @@ public class SQLiteCore implements DBCore
     private File file;
 
     /**
-     *
      * @param dbLocation
      */
     public SQLiteCore(String dbLocation)

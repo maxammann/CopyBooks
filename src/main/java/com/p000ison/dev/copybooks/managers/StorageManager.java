@@ -6,19 +6,20 @@ import com.p000ison.dev.copybooks.Helper;
 import com.p000ison.dev.copybooks.storage.DBCore;
 import com.p000ison.dev.copybooks.storage.MySQLCore;
 import com.p000ison.dev.copybooks.storage.SQLiteCore;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+
 import org.bukkit.ChatColor;
 
 /**
  * @author phaed
  */
-public final class StorageManager
-{
+public final class StorageManager {
 
     private CopyBooks plugin;
     private DBCore core;
@@ -50,7 +51,7 @@ public final class StorageManager
                 if (!core.existsTable("cb_books")) {
                     CopyBooks.debug("Creating table: cb_books");
 
-                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` bigint(20) NOT NULL auto_increment, `title` varchar(25) NOT NULL, `pages` varchar(16) NOT NULL, `title` varchar(1000) NOT NULL, PRIMARY KEY  (`id`));";
+                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` bigint(20) NOT NULL auto_increment, `title` varchar(25) NOT NULL, `pages` varchar(16) NOT NULL, `title` varchar(1000) NOT NULL,  `created`  timestamp default CURRENT_TIMESTAMP, PRIMARY KEY  (`id`));";
                     core.execute(query);
                 }
 
@@ -68,7 +69,7 @@ public final class StorageManager
                 if (!core.existsTable("sc_clans")) {
                     CopyBooks.debug("Creating table: sc_clans");
 
-                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` INTEGER, `title` varchar(25) NOT NULL, `author` varchar(16) NOT NULL, `pages` varchar(1000) NOT NULL, `created`  PRIMARY KEY  (`id`));";
+                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` bigint(20), `title` varchar(25) NOT NULL, `author` varchar(16) NOT NULL, `pages` varchar(1000) NOT NULL, `created` timestamp default CURRENT_TIMESTAMP, PRIMARY KEY  (`id`));";
                     core.execute(query);
                 }
             } else {
@@ -106,6 +107,22 @@ public final class StorageManager
 //        for (Book book : books) {
 //            plugin.getBookManager().addBook(book.getId(), book);
 //        }
+    }
+
+    public boolean deleteBookById(long id)
+    {
+        try {
+            deleteBookById.setLong(1, id);
+            int i = deleteBookById.executeUpdate();
+            if (i == 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (SQLException ex) {
+            CopyBooks.debug(null, ex);
+        }
+        return false;
     }
 
     public void updateBookByTitle(String title, Book book)
@@ -146,6 +163,11 @@ public final class StorageManager
         }
     }
 
+    public void insertBook(Book book)
+    {
+        insertBook(book.getTitle(), book.getAuthor(), book.getPages());
+    }
+
     public Book retrieveBook(long id)
     {
 
@@ -158,7 +180,7 @@ public final class StorageManager
             try {
                 while (res.next()) {
                     try {
-                        return new Book(res.getLong("id"), res.getString("page"), res.getString("author"), Helper.fromJSONStringtoList("pages", res.getString("pages")));
+                        return new Book(res.getLong("id"), res.getString("title"), res.getString("author"), Helper.fromJSONStringtoList("pages", res.getString("pages")));
                     } catch (Exception ex) {
                         CopyBooks.debug(null, ex);
                     }
@@ -182,8 +204,7 @@ public final class StorageManager
         //  Date twoWeeksBefore = calendar.getTime();
 
         ResultSet res = core.select(query);
-        
-        
+
 
         if (res != null) {
             try {

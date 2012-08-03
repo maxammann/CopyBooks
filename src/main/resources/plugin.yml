@@ -1,7 +1,8 @@
 name: CopyBooks
 main: com.p000ison.dev.copybooks.CopyBooks
 version: maven-version-number
-softdepend: []
+softdepend: [ Vault ]
 permissions:
 commands:
   copybooks:
+  cb:

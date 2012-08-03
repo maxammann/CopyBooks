@@ -2,18 +2,19 @@ package com.p000ison.dev.copybooks.managers;
 
 import com.p000ison.dev.copybooks.Command;
 import com.p000ison.dev.copybooks.CopyBooks;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
  * @author phaed
  */
-public final class CommandManager
-{
+public final class CommandManager {
 
     private CopyBooks plugin;
     private LinkedHashMap<String, Command> commands;
