@@ -51,7 +51,7 @@ public final class StorageManager {
                 if (!core.existsTable("cb_books")) {
                     CopyBooks.debug("Creating table: cb_books");
 
-                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` bigint(20) NOT NULL auto_increment, `title` varchar(25) NOT NULL, `pages` varchar(16) NOT NULL, `title` varchar(1000) NOT NULL,  `created`  timestamp default CURRENT_TIMESTAMP, PRIMARY KEY  (`id`));";
+                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` bigint(20) NOT NULL auto_increment, `title` varchar(25) NOT NULL, `pages` varchar(16) NOT NULL, `title` varchar(1000) NOT NULL,  `created`  timestamp default CURRENT_TIMESTAMP, ´creator´ varchar(16) NOT NULL, PRIMARY KEY  (`id`));";
                     core.execute(query);
                 }
 
@@ -69,7 +69,7 @@ public final class StorageManager {
                 if (!core.existsTable("sc_clans")) {
                     CopyBooks.debug("Creating table: sc_clans");
 
-                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` bigint(20), `title` varchar(25) NOT NULL, `author` varchar(16) NOT NULL, `pages` varchar(1000) NOT NULL, `created` timestamp default CURRENT_TIMESTAMP, PRIMARY KEY  (`id`));";
+                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` bigint(20), `title` varchar(25) NOT NULL, `author` varchar(16) NOT NULL, `pages` varchar(1000) NOT NULL, `created` timestamp default CURRENT_TIMESTAMP, ´creator´ varchar(16) NOT NULL, PRIMARY KEY  (`id`));";
                     core.execute(query);
                 }
             } else {
@@ -82,7 +82,7 @@ public final class StorageManager {
     public void prepareStatements()
     {
         //prepare here
-        insertBook = core.prepareStatement("INSERT INTO `cb_books` ( title, author, pages ) VALUES ( ?, ?, ? );");
+        insertBook = core.prepareStatement("INSERT INTO `cb_books` ( title, author, pages, creator ) VALUES ( ?, ?, ?, ? );");
         updateBookByTitle = core.prepareStatement("UPDATE `cb_books` SET title = ?, author = ?, pages = ? WHERE title = ?;");
         updateBookById = core.prepareStatement("UPDATE `cb_books` SET title = ?, author = ?, pages = ? WHERE id = ?;");
         deleteBookByTitle = core.prepareStatement("DELETE FROM `cb_books` WHERE title = ?;");
@@ -151,21 +151,22 @@ public final class StorageManager {
         }
     }
 
-    public void insertBook(String title, String author, List<String> pages)
+    public void insertBook(String title, String author, List<String> pages, String pusher)
     {
         try {
             insertBook.setString(1, title);
             insertBook.setString(2, author);
             insertBook.setString(3, Helper.fromListToJSONString("pages", pages));
+            insertBook.setString(4, pusher);
             insertBook.executeUpdate();
         } catch (SQLException ex) {
             CopyBooks.debug("Failed inserting book!", ex);
         }
     }
 
-    public void insertBook(Book book)
+    public void insertBook(Book book, String pusher)
     {
-        insertBook(book.getTitle(), book.getAuthor(), book.getPages());
+        insertBook(book.getTitle(), book.getAuthor(), book.getPages(), pusher);
     }
 
     public Book retrieveBook(long id)
@@ -180,7 +181,7 @@ public final class StorageManager {
             try {
                 while (res.next()) {
                     try {
-                        return new Book(res.getLong("id"), res.getString("title"), res.getString("author"), Helper.fromJSONStringtoList("pages", res.getString("pages")));
+                        return new Book(res.getLong("id"), res.getString("title"), res.getString("author"), Helper.fromJSONStringtoList("pages", res.getString("pages")), res.getString("creator"));
                     } catch (Exception ex) {
                         CopyBooks.debug(null, ex);
                     }
@@ -211,7 +212,7 @@ public final class StorageManager {
                 while (res.next()) {
                     try {
                         //   if (res.getTimestamp("insert_date").after(twoWeeksBefore)) {
-                        Book book = new Book(res.getLong("id"), res.getString("title"), res.getString("author"), Helper.fromJSONStringtoList("pages", res.getString("pages")));
+                        Book book = new Book(res.getLong("id"), res.getString("title"), res.getString("author"), Helper.fromJSONStringtoList("pages", res.getString("pages")), res.getString("creator"));
                         out.add(book);
                         //         }
                     } catch (Exception ex) {

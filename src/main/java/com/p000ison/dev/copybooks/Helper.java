@@ -1,18 +1,23 @@
 /*
- * Copyright (C) 2012 p000ison
- * 
- * This work is licensed under the Creative Commons
- * Attribution-NonCommercial-NoDerivs 3.0 Unported License. To view a copy of
- * this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send
- * a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco,
- * California, 94105, USA.
- * 
- */
+* Copyright (C) 2012 p000ison
+*
+* This work is licensed under the Creative Commons
+* Attribution-NonCommercial-NoDerivs 3.0 Unported License. To view a copy of
+* this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send
+* a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco,
+* California, 94105, USA.
+*
+*/
 package com.p000ison.dev.copybooks;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
+import net.minecraft.server.NBTTagCompound;
+import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -33,6 +38,64 @@ public class Helper {
         json.put(key, array);
 
         return json.toString();
+    }
+
+    public static int getAmontFromSign(char[] chars)
+    {
+        StringBuilder amountString = new StringBuilder();
+
+        for (int i = chars.length - 1; i > 0; i--) {
+            if (chars[i] == ':') {
+                break;
+            }
+
+            amountString.append(chars[i]);
+        }
+
+        int amount = -1;
+
+        try {
+            amount = Integer.parseInt(amountString.toString());
+        } catch (NumberFormatException e) {
+            CopyBooks.debug(Level.WARNING, ChatColor.DARK_RED + "Failed at parsing sign!");
+        }
+
+        return amount;
+    }
+
+    public static long getIdFromSign(char[] chars)
+    {
+        StringBuilder idString = new StringBuilder();
+
+        for (char character : chars) {
+            if (character == '[') {
+                break;
+            }
+
+            idString.append(character);
+
+        }
+        long id = -1;
+
+        try {
+            id = Long.parseLong(idString.toString());
+        } catch (NumberFormatException e) {
+            CopyBooks.debug(Level.WARNING, ChatColor.DARK_RED + "Failed at parsing sign!");
+        }
+        return id;
+    }
+
+    public static boolean unsignBook(ItemStack item)
+    {
+        NBTTagCompound tag = ((CraftItemStack) item).getHandle().tag;
+
+        if (tag.get("author") == null || tag.getString("title") == null) {
+            return false;
+        }
+
+        tag.remove("author");
+        tag.remove("title");
+        return true;
     }
 
     public static ArrayList<String> fromJSONStringtoList(String key, String string)

@@ -43,15 +43,17 @@ public class CopyBookCommand extends GenericCommand {
             ItemStack item = player.getItemInHand();
 
             if (item == null) {
+                player.sendMessage("Please hold a written book!");
                 return;
             }
 
-            if (!item.getType().equals(Material.BOOK_AND_QUILL)) {
+            if (!item.getType().equals(Material.WRITTEN_BOOK)) {
+                player.sendMessage("Please hold a written book!");
                 return;
             }
 
             Book book = new Book(item);
-            plugin.getStorageManager().insertBook(book);
+            plugin.getStorageManager().insertBook(book, player.getName());
 
             sender.sendMessage(String.format("You copied the book %s from %s", book.getTitle(), book.getAuthor()));
         } else {

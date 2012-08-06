@@ -12,8 +12,8 @@ package com.p000ison.dev.copybooks;
 
 import com.p000ison.dev.copybooks.commands.*;
 import com.p000ison.dev.copybooks.listeners.CBPlayerListener;
-import com.p000ison.dev.copybooks.managers.BookManager;
 import com.p000ison.dev.copybooks.managers.CommandManager;
+import com.p000ison.dev.copybooks.managers.EconomyManager;
 import com.p000ison.dev.copybooks.managers.SettingsManager;
 import com.p000ison.dev.copybooks.managers.StorageManager;
 
@@ -38,10 +38,9 @@ public class CopyBooks extends JavaPlugin {
     private ResourceBundle language;
     private CommandManager commandManager;
     private StorageManager storageManager;
-    private BookManager bookManager;
     private SettingsManager settingsManager;
-    public static Permission permission = null;
-    public static Economy economy = null;
+    private EconomyManager economyManager;
+    private static Permission permission = null;
 
     public static void debug(String msg, Throwable ex)
     {
@@ -52,9 +51,7 @@ public class CopyBooks extends JavaPlugin {
 
     public static void debug(String msg)
     {
-        if (logger != null) {
-            logger.log(Level.INFO, msg);
-        }
+        debug(Level.INFO, msg);
     }
 
     public static void debug(Level level, String msg)
@@ -63,6 +60,12 @@ public class CopyBooks extends JavaPlugin {
             logger.log(level, msg);
         }
     }
+
+    public static Permission getPermission()
+    {
+        return permission;
+    }
+
 
     @Override
     public void onEnable()
@@ -83,11 +86,9 @@ public class CopyBooks extends JavaPlugin {
     {
         settingsManager = new SettingsManager(this);
         commandManager = new CommandManager(this);
-        bookManager = new BookManager(this);
         storageManager = new StorageManager(this);
+        economyManager = new EconomyManager(this);
         setupPermissions();
-        setupEconomy();
-
 
         commandManager = new CommandManager(this);
         commandManager.addCommand(new CopyBookCommand(this, "Copy"));
@@ -95,8 +96,10 @@ public class CopyBooks extends JavaPlugin {
         commandManager.addCommand(new CreateBookCommand(this, "Create"));
         commandManager.addCommand(new UnsignBookCommand(this, "Unsign"));
         commandManager.addCommand(new RemoveBookCommand(this, "Remove"));
+        commandManager.addCommand(new HelpCommand(this, "Help"));
+        commandManager.addCommand(new SellCommand(this, "Sell"));
+        commandManager.addCommand(new AcceptCommand(this, "Accept"));
     }
-
 
     private boolean setupPermissions()
     {
@@ -104,29 +107,13 @@ public class CopyBooks extends JavaPlugin {
         if (permissionProvider != null) {
             permission = permissionProvider.getProvider();
         }
-        return (permission != null);
+        return (getPermission() != null);
     }
 
-
-    private boolean setupEconomy()
-    {
-        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (economyProvider != null) {
-            economy = economyProvider.getProvider();
-        }
-
-        return (economy != null);
-    }
 
     public SettingsManager getSettingsManager()
     {
         return settingsManager;
-    }
-
-
-    public Permission getPermissions()
-    {
-        return permission;
     }
 
     @Override
@@ -146,11 +133,6 @@ public class CopyBooks extends JavaPlugin {
         super.onDisable();
     }
 
-    public BookManager getBookManager()
-    {
-        return bookManager;
-    }
-
     public CommandManager getCommandManager()
     {
         return commandManager;
@@ -164,5 +146,10 @@ public class CopyBooks extends JavaPlugin {
     public String getTranslation(String key)
     {
         return language.getString(key);
+    }
+
+    public EconomyManager getEconomyManager()
+    {
+        return economyManager;
     }
 }

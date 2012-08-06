@@ -13,6 +13,7 @@ package com.p000ison.dev.copybooks.commands;
 import com.p000ison.dev.copybooks.Book;
 import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.GenericCommand;
+import com.p000ison.dev.copybooks.Helper;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -49,7 +50,7 @@ public class UnsignBookCommand extends GenericCommand {
                 return;
             }
 
-            plugin.getBookManager().unsignBook(item);
+            Helper.unsignBook(item);
 
             sender.sendMessage(String.format("You unsigned the book!"));
         } else {

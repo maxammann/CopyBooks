@@ -2,3 +2,7 @@ groups:
   Admin: 1
   default: 2
   Member: 3
+commands:
+    rules:
+      id: 7
+      message: 'Here are the rules'

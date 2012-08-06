@@ -29,21 +29,23 @@ public class Book {
     private String title;
     private String author;
     private ArrayList<String> pages;
+    private String creator;
 
-    public Book(long id, String title, String author, ArrayList<String> pages)
+    public Book(long id, String title, String author, ArrayList<String> pages, String creator)
     {
         this.id = id;
         this.title = title;
         this.author = author;
         this.pages = pages;
+        this.creator = creator;
     }
 
-    public Book(String title, String author, ArrayList<String> pages)
+    public Book(String title, String author, ArrayList<String> pages, String creator)
     {
-        this(0, title, author, pages);
+        this(0, title, author, pages, creator);
     }
 
-    public Book(ItemStack item)
+    public Book(ItemStack item, String creator)
     {
         NBTTagCompound tag = ((CraftItemStack) (item)).getHandle().tag;
 
@@ -64,6 +66,7 @@ public class Book {
         this.title = title;
         this.author = author;
         this.pages = realPages;
+        this.creator = creator;
     }
 
 
@@ -108,5 +111,10 @@ public class Book {
         item.getHandle().tag = newBookData;
 
         return (ItemStack) item;
+    }
+
+    public String getCreator()
+    {
+        return creator;
     }
 }

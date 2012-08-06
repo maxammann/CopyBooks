@@ -46,36 +46,43 @@ public class ListCommand extends GenericCommand {
         }
 
         List<Book> books = plugin.getStorageManager().retrieveBooks((multiplier - 1) * MAX_BOOKS_PER_PAGE, multiplier * MAX_BOOKS_PER_PAGE);
-        if (books != null) {
 
-            ChatBlock chatBlock = new ChatBlock();
-            ChatBlock.sendBlank(sender);
-            ChatBlock.saySingle(sender, "List");
-            ChatBlock.sendBlank(sender);
-
-            ChatBlock.sendBlank(sender);
-
-            chatBlock.setFlexibility(true, false, false);
-            chatBlock.setAlignment("l", "c", "c");
-
-            chatBlock.addRow(ChatColor.AQUA + "  " + "ID", "Title", "Author");
-            chatBlock.addRow();
-
-            for (Book book : books) {
-
-                if (book != null) {
-                    String id = String.valueOf(book.getId());
-                    String title = book.getTitle();
-                    String author = book.getAuthor();
-
-                    chatBlock.addRow(ChatColor.GRAY + "  " + id, title, author);
-                }
-            }
-
-            chatBlock.sendBlock(sender, MAX_BOOKS_PER_PAGE + 3);
-
+        if (books == null) {
+            sender.sendMessage("Failed to get books!");
+            return;
         } else {
-            sender.sendMessage("not enough books");
+            if (books.isEmpty()) {
+                sender.sendMessage("No books found!");
+                return;
+            }
         }
+
+        ChatBlock chatBlock = new ChatBlock();
+        ChatBlock.sendBlank(sender);
+        ChatBlock.saySingle(sender, "List");
+        ChatBlock.sendBlank(sender);
+
+        ChatBlock.sendBlank(sender);
+
+        chatBlock.setFlexibility(true, false, false);
+        chatBlock.setAlignment("l", "c", "c");
+
+        chatBlock.addRow(ChatColor.AQUA + "  " + "ID", "Title", "Author");
+        chatBlock.addRow();
+
+        for (Book book : books) {
+
+            if (book != null) {
+                String id = String.valueOf(book.getId());
+                String title = book.getTitle();
+                String author = book.getAuthor();
+
+                chatBlock.addRow(ChatColor.GRAY + "  " + id, title, author);
+            }
+        }
+
+        chatBlock.sendBlock(sender, MAX_BOOKS_PER_PAGE + 3);
+
+
     }
 }
