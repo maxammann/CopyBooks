@@ -52,7 +52,7 @@ public class CopyBookCommand extends GenericCommand {
                 return;
             }
 
-            Book book = new Book(item);
+            Book book = new Book(item, player.getName());
             plugin.getStorageManager().insertBook(book, player.getName());
 
             sender.sendMessage(String.format("You copied the book %s from %s", book.getTitle(), book.getAuthor()));

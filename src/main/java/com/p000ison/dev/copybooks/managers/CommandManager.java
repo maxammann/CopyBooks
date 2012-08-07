@@ -3,10 +3,7 @@ package com.p000ison.dev.copybooks.managers;
 import com.p000ison.dev.copybooks.Command;
 import com.p000ison.dev.copybooks.CopyBooks;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -18,11 +15,58 @@ public final class CommandManager {
 
     private CopyBooks plugin;
     private LinkedHashMap<String, Command> commands;
+    private LinkedHashMap<String, CommandState> commandchecks;
 
     public CommandManager(CopyBooks plugin)
     {
         this.plugin = plugin;
         commands = new LinkedHashMap<String, Command>();
+        //commandchecks = new LinkedHashMap<String, CommandState>();
+        //plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new CommandChecker(), 20L, 20L);
+    }
+
+    public void addCommandCheck(String player, String command)
+    {
+        commandchecks.put(player, new CommandState(command));
+    }
+
+    public String getPendingCommand(String player)
+    {
+        return commandchecks.get(player).getCommand();
+    }
+
+    private class CommandState {
+        private long date;
+        private String command;
+
+        public CommandState(String command)
+        {
+            date = System.currentTimeMillis();
+            this.command = command;
+        }
+
+        public long getDate()
+        {
+            return date;
+        }
+
+        public String getCommand()
+        {
+            return command;
+        }
+    }
+
+    private class CommandChecker implements Runnable {
+
+        @Override
+        public void run()
+        {
+            for (Map.Entry<String, CommandState> entry : commandchecks.entrySet()) {
+                if (System.currentTimeMillis() - 10000 > entry.getValue().getDate()) {
+                    commandchecks.remove(entry.getKey());
+                }
+            }
+        }
     }
 
     public void addCommand(Command command)

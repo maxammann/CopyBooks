@@ -16,6 +16,7 @@ import java.util.logging.Level;
 
 import net.minecraft.server.NBTTagCompound;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONArray;
@@ -83,19 +84,6 @@ public class Helper {
             CopyBooks.debug(Level.WARNING, ChatColor.DARK_RED + "Failed at parsing sign!");
         }
         return id;
-    }
-
-    public static boolean unsignBook(ItemStack item)
-    {
-        NBTTagCompound tag = ((CraftItemStack) item).getHandle().tag;
-
-        if (tag.get("author") == null || tag.getString("title") == null) {
-            return false;
-        }
-
-        tag.remove("author");
-        tag.remove("title");
-        return true;
     }
 
     public static ArrayList<String> fromJSONStringtoList(String key, String string)

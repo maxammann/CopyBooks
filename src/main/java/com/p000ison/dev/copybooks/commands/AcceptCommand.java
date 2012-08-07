@@ -25,7 +25,7 @@ public class AcceptCommand extends GenericCommand {
     public void execute(CommandSender sender, String label, String[] args)
     {
         if (sender instanceof Player) {
-            Player player = (Player)sender;
+            Player player = (Player) sender;
             Transaction transaction = plugin.getEconomyManager().getTransactionByOpponent(player.getName());
 
             if (transaction == null) {

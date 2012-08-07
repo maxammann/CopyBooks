@@ -14,6 +14,7 @@ import net.minecraft.server.NBTTagCompound;
 import net.minecraft.server.NBTTagList;
 import net.minecraft.server.NBTTagString;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
@@ -111,6 +112,35 @@ public class Book {
         item.getHandle().tag = newBookData;
 
         return (ItemStack) item;
+    }
+
+    public static boolean unsignBook(ItemStack item)
+    {
+        NBTTagCompound tag = ((CraftItemStack) item).getHandle().tag;
+
+        if (tag.get("author") == null || tag.getString("title") == null) {
+            return false;
+        }
+
+        tag.remove("author");
+        tag.remove("title");
+        return true;
+    }
+
+
+    public static boolean hasPermission(Book book, CommandSender player)
+    {
+        if (player.hasPermission("cb.books.*")) {
+            return true;
+        }
+
+        if (player.hasPermission("cb.books.own")) {
+            if (book.getCreator().equals(player.getName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public String getCreator()

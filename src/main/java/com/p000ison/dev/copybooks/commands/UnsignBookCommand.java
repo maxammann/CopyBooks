@@ -50,7 +50,7 @@ public class UnsignBookCommand extends GenericCommand {
                 return;
             }
 
-            Helper.unsignBook(item);
+            Book.unsignBook(item);
 
             sender.sendMessage(String.format("You unsigned the book!"));
         } else {

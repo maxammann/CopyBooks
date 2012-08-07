@@ -24,6 +24,7 @@ import com.p000ison.dev.copybooks.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -110,9 +111,27 @@ public class CBPlayerListener implements Listener {
                         return;
                     }
 
-                    Transaction transaction =createTransactionFromString(lines, player.getName());
-                    plugin.getEconomyManager().executeTransaction(transaction);
-                    player.getInventory().addItem(plugin.getStorageManager().retrieveBook(transaction.getBookId()).toItemStack(transaction.getAmount()));
+                    Transaction transaction = createTransactionFromString(lines, player.getName());
+
+                    if (transaction == null) {
+                        player.sendMessage("Failed to create the transaction!");
+                        return;
+                    }
+
+
+                    Book book = plugin.getStorageManager().retrieveBook(transaction.getBookId());
+
+                    if (book == null) {
+                        player.sendMessage("Failed to get the book!");
+                        return;
+                    }
+
+                    if (!plugin.getEconomyManager().executeTransaction(transaction)) {
+                        player.sendMessage("You dont have enough money!");
+                        return;
+                    }
+
+                    player.getInventory().addItem(book.toItemStack(transaction.getAmount()));
                 }
             }
         }
@@ -121,10 +140,6 @@ public class CBPlayerListener implements Listener {
 
     public static Transaction createTransactionFromString(String[] lines, String opponent)
     {
-        if (!detectSign(lines)) {
-            return null;
-        }
-
         String requester = lines[0] + lines[1];
         char[] chars = lines[2].toCharArray();
 
@@ -139,10 +154,10 @@ public class CBPlayerListener implements Listener {
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event)
     {
         Player player = event.getPlayer();
-        String[] args = event.getFormat().split(" ");
+        String[] args = event.getMessage().split(" ");
 
         if (args.length == 1) {
-            BookCommandHolder cmd = plugin.getSettingsManager().getCommand(args[0]);
+            BookCommandHolder cmd = plugin.getSettingsManager().getCommand(args[0].trim());
             if (cmd == null) {
                 return;
             }
@@ -202,38 +217,88 @@ public class CBPlayerListener implements Listener {
 
             player.sendMessage("CopyBooks created!");
         } else {
-            if (detectSign(lines)) {
+            if (detectSignPlace(lines)) {
                 if (!player.hasPermission("cb.place.economy.sign")) {
                     event.setCancelled(true);
                     return;
                 }
 
-                if (!plugin.getStorageManager().retrieveBook(Helper.getIdFromSign(lines[2].toCharArray())).getCreator().equals(player.getName())) {
-                    player.sendMessage("This is not your book!");
+                Book book = plugin.getStorageManager().retrieveBook(Helper.getIdFromSign(lines[2].toCharArray()));
+
+                if (book == null) {
+                    player.sendMessage("The book doesnt exist!");
                     return;
                 }
 
+                if (!Book.hasPermission(book, player)) {
+                    player.sendMessage("You dont have permission to this book!");
+                    return;
+                }
+
+                if (lines[1].isEmpty()) {
+                    String bookTitle = book.getTitle();
+
+                    int bookTitleLength = bookTitle.length();
+                    int test = 15 - bookTitleLength - 2;
+
+                    if (test < 0) {
+                        bookTitle = bookTitle.substring(0, bookTitleLength - 2) + "...";
+                    }
+
+                    sign.setLine(1, "[" + bookTitle + "]");
+                } else {
+                    String[] toFormat = lines[2].split(":");
+                    String bookTitle = book.getTitle();
+
+                    int bookTitleLength = bookTitle.length();
+                    int line2Length = lines[2].length();
+                    int test = 15 - bookTitleLength - line2Length - 2;
+
+                    if (test < 0) {
+                        bookTitle = bookTitle.substring(0, bookTitleLength - line2Length - 2) + "...";
+                    }
+
+                    sign.setLine(2, toFormat[0] + "[" + bookTitle + "]:" + toFormat[1]);
+                }
+
+                sign.update();
+
                 player.sendMessage("CopyBooks economy sign created!");
             }
-
         }
     }
 
-    //     public static void main(String[] args) {
-//         String[] lines = {"p000ison", "", "5[Hallo:23", "4.3:3"};
+//    public static void main(String[] args)
+//    {
+//        String[] lines = {"vxcv", "", "d:23", "4.5"};
 //
-//         if (detectSign(lines)) {
+//        if (detectSignPlace(lines)) {
 //            System.out.println("success");
 //
-//             createTransactionFromString(lines , "HUhua");
-//         }
-//     }
+//            createTransactionFromString(lines, "HUhua");
+//
+//            String[] toFormat = lines[2].split(":");
+//            String bookTitle = "addddvgfhfgh";
+//
+//            int bookTitlelength = bookTitle.length();
+//            int line2length = lines[2].length();
+//            int test = 15 - bookTitlelength - line2length - 2;
+//
+//            if (test < 0) {
+//                bookTitle = bookTitle.substring(0, bookTitlelength - line2length - 2) + "...";
+//            }
+//
+//            System.out.println(bookTitle);
+//        }
+//    }
+
+    public static boolean detectSignPlace(String[] lines)
+    {
+        return !lines[0].isEmpty() && (lines[2].substring(0, 1).matches("[0-9]+") && lines[2].contains(":") && lines[3].matches("[0-9]+"));
+    }
+
     public static boolean detectSign(String[] lines)
     {
-        if (lines[0].isEmpty() || lines[2].isEmpty() || lines[3].isEmpty()) {
-            return false;
-        }
-
-        return (lines[2].substring(0, 1).matches("[0-9]+") && lines[2].contains("[") && lines[2].contains("]") && lines[3].matches("[0-9]+"));
+        return !lines[0].isEmpty() && (lines[2].substring(0, 1).matches("[0-9]+") && lines[2].contains("[") && lines[2].contains("]:") && lines[3].matches("[0-9]+"));
     }
 }

@@ -71,6 +71,11 @@ public class CreateBookCommand extends GenericCommand {
                 return;
             }
 
+            if (!Book.hasPermission(book, player)) {
+                player.sendMessage("You dont have permisson for this boook!");
+                return;
+            }
+
             ItemStack bookItem = book.toItemStack(amount);
 
             player.getInventory().addItem(bookItem);

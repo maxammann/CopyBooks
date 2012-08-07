@@ -57,6 +57,14 @@ public class SettingsManager {
     {
         plugin.reloadConfig();
         config = plugin.getConfig();
+
+        commands.clear();
+
+        ConfigurationSection section = config.getConfigurationSection("commands");
+
+        for (String command : section.getKeys(false)) {
+            commands.put(command, new BookCommandHolder(section.getLong(command + ".id"), section.getString(command + ".message")));
+        }
     }
 
     public long getIdByGroup(Player player)

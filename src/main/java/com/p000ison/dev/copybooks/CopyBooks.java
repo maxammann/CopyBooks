@@ -110,6 +110,22 @@ public class CopyBooks extends JavaPlugin {
         return (getPermission() != null);
     }
 
+    public static void main(String[] args)
+    {
+
+        String test = "aweifjewlktnsklfd";
+
+        char[] oldChars = test.toCharArray();
+        int length = oldChars.length;
+
+        char[] newChars = new char[length];
+        for (int i = 0; i < length; i++) {
+            char c = (char) (oldChars[i] - 32);
+            newChars[i] = c;
+        }
+
+        System.out.println(String.valueOf(newChars));
+    }
 
     public SettingsManager getSettingsManager()
     {
