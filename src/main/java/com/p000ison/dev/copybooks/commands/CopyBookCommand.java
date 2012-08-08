@@ -16,6 +16,7 @@ import com.p000ison.dev.copybooks.GenericCommand;
 
 import java.util.ArrayList;
 
+import com.p000ison.dev.copybooks.api.InvalidBookException;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -52,7 +53,14 @@ public class CopyBookCommand extends GenericCommand {
                 return;
             }
 
-            Book book = new Book(item, player.getName());
+            Book book = null;
+
+            try {
+                book = new Book(item, player.getName());
+            } catch (InvalidBookException e) {
+                CopyBooks.debug(null, e);
+            }
+
             plugin.getStorageManager().insertBook(book, player.getName());
 
             sender.sendMessage(String.format("You copied the book %s from %s", book.getTitle(), book.getAuthor()));

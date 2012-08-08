@@ -11,7 +11,9 @@
 package com.p000ison.dev.copybooks;
 
 import com.p000ison.dev.copybooks.api.CraftWrittenBook;
+import com.p000ison.dev.copybooks.api.InvalidBookException;
 import org.bukkit.command.CommandSender;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
@@ -28,6 +30,12 @@ public class Book extends CraftWrittenBook {
         super(title, author, pages, creator);
         this.setId(id);
         this.setCreator(creator);
+    }
+
+    public Book(ItemStack itemStack, String creator) throws InvalidBookException
+    {
+        super(itemStack);
+        this.creator = creator;
     }
 
     public static boolean hasPermission(Book book, CommandSender player)
