@@ -35,7 +35,7 @@ public class CraftWrittenBook implements WrittenBook {
     public CraftWrittenBook(CraftItemStack itemStack) throws InvalidBookException
     {
 
-        if (itemStack.getTypeId() != 386) {
+        if (itemStack.getTypeId() != 387) {
             throw new InvalidBookException("The book must be a written book!");
         }
 
