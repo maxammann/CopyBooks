@@ -13,6 +13,7 @@ package com.p000ison.dev.copybooks.commands;
 import com.p000ison.dev.copybooks.Book;
 import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.GenericCommand;
+import com.p000ison.dev.copybooks.api.InvalidBookException;
 import net.minecraft.server.Item;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -76,7 +77,13 @@ public class CreateBookCommand extends GenericCommand {
                 return;
             }
 
-            ItemStack bookItem = book.toItemStack(amount);
+            ItemStack bookItem = null;
+            try {
+                bookItem = book.toItemStack(amount);
+            } catch (InvalidBookException e) {
+                CopyBooks.debug(null, e);
+                return;
+            }
 
             player.getInventory().addItem(bookItem);
             player.updateInventory();
