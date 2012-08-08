@@ -69,7 +69,7 @@ public class Helper {
         StringBuilder idString = new StringBuilder();
 
         for (char character : chars) {
-            if (character == '[') {
+            if (character == '[' || character == ':') {
                 break;
             }
 
