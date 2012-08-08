@@ -22,6 +22,7 @@ package com.p000ison.dev.copybooks.listeners;
 
 import com.p000ison.dev.copybooks.*;
 import com.p000ison.dev.copybooks.api.InvalidBookException;
+import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -32,6 +33,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -201,25 +203,11 @@ public class CBPlayerListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
-    public void onBlockPlace(BlockPlaceEvent event)
+    public void onBlockPlace(SignChangeEvent event)
     {
         Player player = event.getPlayer();
 
-        Block block = event.getBlock();
-
-        if (block == null) {
-            return;
-        }
-
-        BlockState state = block.getState();
-
-        if (!(state instanceof Sign)) {
-            return;
-        }
-
-        Sign sign = (Sign) state;
-
-        String[] lines = sign.getLines();
+        String[] lines = event.getLines();
 
         if (lines[0].equalsIgnoreCase("[CopyBooks]")) {
 
@@ -236,6 +224,7 @@ public class CBPlayerListener implements Listener {
             }
 
             player.sendMessage("CopyBooks created!");
+            event.setLine(0, ChatColor.GREEN + "[CopyBooks]");
         } else {
             if (detectSignPlace(lines)) {
                 if (!player.hasPermission("cb.place.economy.sign")) {
@@ -259,10 +248,10 @@ public class CBPlayerListener implements Listener {
 
                 if (lines[0].isEmpty()) {
                     if (name.length() > 15) {
-                        sign.setLine(0, name.substring(0, 15));
-                        sign.setLine(1, name.substring(15, name.length()));
+                        event.setLine(0, name.substring(0, 15));
+                        event.setLine(1, name.substring(15, name.length()));
                     } else {
-                        sign.setLine(0, name);
+                        event.setLine(0, name);
                     }
                 } else {
                     if (!lines[0].equals(name)) {
@@ -291,7 +280,7 @@ public class CBPlayerListener implements Listener {
                         bookTitle = bookTitle.substring(0, bookTitleLength - 2) + "...";
                     }
 
-                    sign.setLine(2, "[" + bookTitle + "]");
+                    event.setLine(2, "[" + bookTitle + "]");
                 } else {
                     String[] toFormat = lines[2].split(":");
                     String bookTitle = book.getTitle();
@@ -304,10 +293,10 @@ public class CBPlayerListener implements Listener {
                         bookTitle = bookTitle.substring(0, bookTitleLength - line2Length - 2) + "...";
                     }
 
-                    sign.setLine(2, toFormat[0] + "[" + bookTitle + "]:" + toFormat[1]);
+                    event.setLine(2, toFormat[0] + "[" + bookTitle + "]:" + toFormat[1]);
                 }
 
-                sign.update();
+                event.getBlock().getState().update();
 
                 player.sendMessage("CopyBooks economy sign created!");
             }
@@ -340,11 +329,11 @@ public class CBPlayerListener implements Listener {
 
     public static boolean detectSignPlace(String[] lines)
     {
-        return (lines[2].substring(0, 1).matches("[0-9]+") && lines[2].contains(":") && lines[3].matches("[0-9]+"));
+        return (!lines[2].isEmpty() && lines[2].substring(0, 1).matches("[0-9]+")) && lines[2].contains(":") && lines[3].matches("[0-9]+");
     }
 
     public static boolean detectSign(String[] lines)
     {
-        return (lines[2].substring(0, 1).matches("[0-9]+") && lines[2].contains("[") && lines[2].contains("]:") && lines[3].matches("[0-9]+"));
+        return (!lines[2].isEmpty() && lines[2].substring(0, 1).matches("[0-9]+")) && lines[2].contains("[") && lines[2].contains("]:") && lines[3].matches("[0-9]+");
     }
 }
