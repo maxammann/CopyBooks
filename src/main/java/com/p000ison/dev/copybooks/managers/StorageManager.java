@@ -51,7 +51,7 @@ public final class StorageManager {
                 if (!core.existsTable("cb_books")) {
                     CopyBooks.debug("Creating table: cb_books");
 
-                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` bigint(20) NOT NULL auto_increment, `title` varchar(25) NOT NULL, `pages` varchar(16) NOT NULL, `title` varchar(1000) NOT NULL,  `created`  timestamp default CURRENT_TIMESTAMP, ´creator´ varchar(16) NOT NULL, PRIMARY KEY  (`id`));";
+                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` bigint(20) NOT NULL auto_increment, `title` varchar(25) NOT NULL, `pages` varchar(16) NOT NULL, `title` varchar(1000) NOT NULL,  `created`  timestamp default CURRENT_TIMESTAMP, `creator` varchar(16) NOT NULL, PRIMARY KEY  (`id`));";
                     core.execute(query);
                 }
 
@@ -67,9 +67,9 @@ public final class StorageManager {
                 CopyBooks.debug("[CopyBooks] Connected successfully to SQLite Database");
 
                 if (!core.existsTable("sc_clans")) {
-                    CopyBooks.debug("Creating table: sc_clans");
+                    CopyBooks.debug("Creating table: cb_books");
 
-                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` bigint(20), `title` varchar(25) NOT NULL, `author` varchar(16) NOT NULL, `pages` varchar(1000) NOT NULL, `created` timestamp default CURRENT_TIMESTAMP, ´creator´ varchar(16) NOT NULL, PRIMARY KEY  (`id`));";
+                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` bigint(20), `title` varchar(25) NOT NULL, `author` varchar(16) NOT NULL, `pages` varchar(1000) NOT NULL, `created` timestamp default CURRENT_TIMESTAMP, `creator` varchar(16) NOT NULL, PRIMARY KEY  (`id`));";
                     core.execute(query);
                 }
             } else {

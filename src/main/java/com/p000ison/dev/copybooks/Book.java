@@ -10,123 +10,25 @@
  */
 package com.p000ison.dev.copybooks;
 
-import net.minecraft.server.NBTTagCompound;
-import net.minecraft.server.NBTTagList;
-import net.minecraft.server.NBTTagString;
-import org.bukkit.Material;
+import com.p000ison.dev.copybooks.api.CraftWrittenBook;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Max
  */
-public class Book {
+public class Book extends CraftWrittenBook {
 
     private long id;
-    private String title;
-    private String author;
-    private ArrayList<String> pages;
     private String creator;
 
     public Book(long id, String title, String author, ArrayList<String> pages, String creator)
     {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.pages = pages;
-        this.creator = creator;
+        super(title, author, pages, creator);
+        this.setId(id);
+        this.setCreator(creator);
     }
-
-    public Book(String title, String author, ArrayList<String> pages, String creator)
-    {
-        this(0, title, author, pages, creator);
-    }
-
-    public Book(ItemStack item, String creator)
-    {
-        NBTTagCompound tag = ((CraftItemStack) (item)).getHandle().tag;
-
-        if (tag == null) {
-            tag = new NBTTagCompound();
-        }
-
-        String author = tag.getString("author");
-        String title = tag.getString("title");
-
-        NBTTagList pages = tag.getList("pages");
-        ArrayList<String> realPages = new ArrayList<String>();
-
-        for (int i = 0; i < pages.size(); i++) {
-            realPages.add(pages.get(i).getName());
-        }
-
-        this.title = title;
-        this.author = author;
-        this.pages = realPages;
-        this.creator = creator;
-    }
-
-
-    public long getId()
-    {
-        return id;
-    }
-
-    public String getTitle()
-    {
-        return title;
-    }
-
-    public String getAuthor()
-    {
-        return author;
-    }
-
-    public ArrayList<String> getPages()
-    {
-        return pages;
-    }
-
-    public ItemStack toItemStack(int amount)
-    {
-        CraftItemStack item = new CraftItemStack(Material.WRITTEN_BOOK);
-        NBTTagCompound newBookData = new NBTTagCompound();
-
-        newBookData.setString("author", this.getAuthor());
-        newBookData.setString("title", this.getTitle());
-
-        NBTTagList pages = new NBTTagList();
-
-        List<String> bookPages = this.getPages();
-
-        for (int i = 0; i < bookPages.size(); i++) {
-            pages.add(new NBTTagString(String.valueOf(i), bookPages.get(i)));
-        }
-
-        newBookData.set("pages", pages);
-
-        item.getHandle().tag = newBookData;
-
-        return (ItemStack) item;
-    }
-
-    public static boolean unsignBook(ItemStack item)
-    {
-        NBTTagCompound tag = ((CraftItemStack) item).getHandle().tag;
-
-        if (tag.get("author") == null || tag.getString("title") == null) {
-            return false;
-        }
-
-        tag.remove("author");
-        tag.remove("title");
-        return true;
-    }
-
 
     public static boolean hasPermission(Book book, CommandSender player)
     {
@@ -143,8 +45,23 @@ public class Book {
         return false;
     }
 
+    public long getId()
+    {
+        return id;
+    }
+
+    public void setId(long id)
+    {
+        this.id = id;
+    }
+
     public String getCreator()
     {
         return creator;
+    }
+
+    public void setCreator(String creator)
+    {
+        this.creator = creator;
     }
 }

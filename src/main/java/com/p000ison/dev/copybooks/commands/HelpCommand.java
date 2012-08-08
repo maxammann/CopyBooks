@@ -43,7 +43,14 @@ public class HelpCommand extends GenericCommand {
 
 
         for (Command cmd : sortCommands) {
-            for (String perm : cmd.getPermissions()) {
+            String[] perms = cmd.getPermissions();
+
+            if (perms == null) {
+                commands.add(cmd);
+                continue;
+            }
+
+            for (String perm : perms) {
                 if (sender.hasPermission(perm)) {
                     commands.add(cmd);
                     break;
