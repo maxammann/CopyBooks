@@ -53,12 +53,13 @@ public class CopyBookCommand extends GenericCommand {
                 return;
             }
 
-            Book book = null;
+            Book book;
 
             try {
                 book = new Book(item, player.getName());
             } catch (InvalidBookException e) {
                 CopyBooks.debug(null, e);
+                return;
             }
 
             plugin.getStorageManager().insertBook(book, player.getName());
