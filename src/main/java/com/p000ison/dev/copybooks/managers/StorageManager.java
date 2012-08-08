@@ -24,7 +24,7 @@ public final class StorageManager {
     private CopyBooks plugin;
     private DBCore core;
     private PreparedStatement insertBook, deleteBookByAuthor, deleteBookById,
-            deleteBookByTitle, updateBookById, updateBookByTitle;
+            deleteBookByTitle, updateBookById, updateBookByTitle, retrieveBookById;
 
     /**
      *
@@ -88,6 +88,7 @@ public final class StorageManager {
         deleteBookByTitle = core.prepareStatement("DELETE FROM `cb_books` WHERE title = ?;");
         deleteBookById = core.prepareStatement("DELETE FROM `cb_books` WHERE id = ?;");
         deleteBookByAuthor = core.prepareStatement("DELETE FROM `cb_books` WHERE author = ?;");
+        retrieveBookById = core.prepareStatement("SELECT * FROM `cb_books` WHERE id = ?;");
     }
 
     /**
@@ -171,14 +172,11 @@ public final class StorageManager {
 
     public Book retrieveBook(long id)
     {
+        try {
+            retrieveBookById.setLong(1, id);
+            ResultSet res = retrieveBookById.executeQuery();
 
-        String query = "SELECT * FROM `cb_books` WHERE id = " + id + ";";
-
-
-        ResultSet res = core.select(query);
-
-        if (res != null) {
-            try {
+            if (res != null) {
                 while (res.next()) {
                     try {
                         return new Book(res.getLong("id"), res.getString("title"), res.getString("author"), Helper.fromJSONStringtoList("pages", res.getString("pages")), res.getString("creator"));
@@ -186,9 +184,9 @@ public final class StorageManager {
                         CopyBooks.debug(null, ex);
                     }
                 }
-            } catch (SQLException ex) {
-                CopyBooks.debug(String.format("An Error occurred: %s", ex.getErrorCode()), ex);
             }
+        } catch (SQLException ex) {
+            CopyBooks.debug(String.format("An Error occurred: %s", ex.getErrorCode()), ex);
         }
 
         return null;

@@ -4,6 +4,7 @@ import com.p000ison.dev.copybooks.Book;
 import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.GenericCommand;
 import com.p000ison.dev.copybooks.Transaction;
+import com.p000ison.dev.copybooks.api.InvalidBookException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -51,7 +52,12 @@ public class AcceptCommand extends GenericCommand {
                 return;
             }
 
-            ItemStack item = book.toItemStack(transaction.getAmount());
+            ItemStack item = null;
+            try {
+                item = book.toItemStack(transaction.getAmount());
+            } catch (InvalidBookException e) {
+                CopyBooks.debug(null, e);
+            }
 
             if (item == null) {
                 CopyBooks.debug("Failed to create ItemStack!");

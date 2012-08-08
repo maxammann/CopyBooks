@@ -27,12 +27,18 @@ public class CraftWrittenBook implements WrittenBook {
         this.pages = pages;
     }
 
+    public CraftWrittenBook(ItemStack itemStack) throws InvalidBookException
+    {
+        this((CraftItemStack) itemStack);
+    }
+
     public CraftWrittenBook(CraftItemStack itemStack) throws InvalidBookException
     {
 
         if (itemStack.getTypeId() != 386) {
             throw new InvalidBookException("The book must be a written book!");
         }
+
         tag = itemStack.getHandle().getTag();
 
         if (tag == null) {

@@ -14,6 +14,7 @@ import com.p000ison.dev.copybooks.Book;
 import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.GenericCommand;
 import com.p000ison.dev.copybooks.Helper;
+import com.p000ison.dev.copybooks.api.CraftWrittenBook;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -50,7 +51,7 @@ public class UnsignBookCommand extends GenericCommand {
                 return;
             }
 
-            Book.unsignBook(item);
+            new CraftWrittenBook(item);
 
             sender.sendMessage(String.format("You unsigned the book!"));
         } else {

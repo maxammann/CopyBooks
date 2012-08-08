@@ -21,6 +21,7 @@
 package com.p000ison.dev.copybooks.listeners;
 
 import com.p000ison.dev.copybooks.*;
+import com.p000ison.dev.copybooks.api.InvalidBookException;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -62,7 +63,11 @@ public class CBPlayerListener implements Listener {
         }
 
 
-        player.getInventory().addItem(book.toItemStack(1));
+        try {
+            player.getInventory().addItem(book.toItemStack(1));
+        } catch (InvalidBookException e) {
+            CopyBooks.debug(null, e);
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -96,7 +101,12 @@ public class CBPlayerListener implements Listener {
                         return;
                     }
 
-                    ItemStack item = book.toItemStack(1);
+                    ItemStack item = null;
+                    try {
+                        item = book.toItemStack(1);
+                    } catch (InvalidBookException e) {
+                        CopyBooks.debug(null, e);
+                    }
                     ItemStack[] contents = new ItemStack[27];
 
                     for (int i = 0; i < 27; i++) {
@@ -131,7 +141,11 @@ public class CBPlayerListener implements Listener {
                         return;
                     }
 
-                    player.getInventory().addItem(book.toItemStack(transaction.getAmount()));
+                    try {
+                        player.getInventory().addItem(book.toItemStack(transaction.getAmount()));
+                    } catch (InvalidBookException e) {
+                        CopyBooks.debug(null, e);
+                    }
                 }
             }
         }
@@ -169,7 +183,13 @@ public class CBPlayerListener implements Listener {
                 return;
             }
 
-            ItemStack item = book.toItemStack(1);
+            ItemStack item = null;
+
+            try {
+                item = book.toItemStack(1);
+            } catch (InvalidBookException e) {
+                CopyBooks.debug(null, e);
+            }
 
             if (item != null) {
                 player.getInventory().addItem(item);
@@ -235,6 +255,32 @@ public class CBPlayerListener implements Listener {
                     return;
                 }
 
+                String name = player.getName();
+
+                if (lines[0].isEmpty()) {
+                    if (name.length() > 15) {
+                        sign.setLine(0, name.substring(0, 15));
+                        sign.setLine(1, name.substring(15, name.length()));
+                    } else {
+                        sign.setLine(0, name);
+                    }
+                } else {
+                    if (!lines[0].equals(name)) {
+
+                        if (lines[0].equals("[AdminShop]") && !player.hasPermission("cb.admin.adminshop")) {
+                            player.sendMessage("You dont have permission!");
+                            event.setCancelled(false);
+                            return;
+                        }
+
+                        if (!player.hasPermission("cb.admin.others")) {
+                            player.sendMessage("You dont have permission!");
+                            event.setCancelled(false);
+                            return;
+                        }
+                    }
+                }
+
                 if (lines[1].isEmpty()) {
                     String bookTitle = book.getTitle();
 
@@ -245,7 +291,7 @@ public class CBPlayerListener implements Listener {
                         bookTitle = bookTitle.substring(0, bookTitleLength - 2) + "...";
                     }
 
-                    sign.setLine(1, "[" + bookTitle + "]");
+                    sign.setLine(2, "[" + bookTitle + "]");
                 } else {
                     String[] toFormat = lines[2].split(":");
                     String bookTitle = book.getTitle();
@@ -294,11 +340,11 @@ public class CBPlayerListener implements Listener {
 
     public static boolean detectSignPlace(String[] lines)
     {
-        return !lines[0].isEmpty() && (lines[2].substring(0, 1).matches("[0-9]+") && lines[2].contains(":") && lines[3].matches("[0-9]+"));
+        return (lines[2].substring(0, 1).matches("[0-9]+") && lines[2].contains(":") && lines[3].matches("[0-9]+"));
     }
 
     public static boolean detectSign(String[] lines)
     {
-        return !lines[0].isEmpty() && (lines[2].substring(0, 1).matches("[0-9]+") && lines[2].contains("[") && lines[2].contains("]:") && lines[3].matches("[0-9]+"));
+        return (lines[2].substring(0, 1).matches("[0-9]+") && lines[2].contains("[") && lines[2].contains("]:") && lines[3].matches("[0-9]+"));
     }
 }
