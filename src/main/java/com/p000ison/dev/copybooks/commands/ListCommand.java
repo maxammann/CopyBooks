@@ -73,7 +73,6 @@ public class ListCommand extends GenericCommand {
         chatBlock.setAlignment("l", "c", "c", "c");
 
         chatBlock.addRow(ChatColor.AQUA + "  " + "ID", "Title", "Author", "Creator");
-        chatBlock.addRow();
 
         for (Book book : sortedBooks) {
 
