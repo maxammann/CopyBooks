@@ -47,6 +47,7 @@ public class CraftWrittenBook implements WrittenBook {
         tag = itemStack.getHandle().getTag();
 
         if (tag == null) {
+            System.out.print("nul nulldskfndlf");
             tag = new NBTTagCompound();
         }
 
@@ -70,6 +71,8 @@ public class CraftWrittenBook implements WrittenBook {
     @Override
     public String getTitle()
     {
+        System.out.println((NBTTagString)tag.get("title"));
+
         return ((NBTTagString) tag.get("title")).data;
     }
 
