@@ -126,4 +126,9 @@ public class SettingsManager {
     {
         return port;
     }
+
+    public boolean isOnlyFirstJoin()
+    {
+        return onlyFirstJoin;
+    }
 }

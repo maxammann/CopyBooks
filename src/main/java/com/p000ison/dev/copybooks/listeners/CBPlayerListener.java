@@ -58,7 +58,7 @@ public class CBPlayerListener implements Listener {
     {
         Player player = event.getPlayer();
 
-        if(player.hasPlayedBefore()) {
+        if(plugin.getSettingsManager().isOnlyFirstJoin() && !player.hasPlayedBefore()) {
             return;
         }
 
