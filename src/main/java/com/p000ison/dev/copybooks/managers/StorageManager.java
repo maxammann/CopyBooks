@@ -42,8 +42,8 @@ public final class StorageManager {
      */
     public void initiateDB()
     {
-        if (false) {
-            core = new MySQLCore("localhost", "mc_books", "root", "");
+        if (plugin.getSettingsManager().usesMySQL()) {
+            core = new MySQLCore(plugin.getSettingsManager().getHost(), plugin.getSettingsManager().getDatabase(), plugin.getSettingsManager().getUser(), plugin.getSettingsManager().getPassword());
 
             if (core.checkConnection()) {
                 CopyBooks.debug("[CopyBooks] Connected successfully to MySQL Database");
@@ -69,7 +69,7 @@ public final class StorageManager {
                 if (!core.existsTable("sc_clans")) {
                     CopyBooks.debug("Creating table: cb_books");
 
-                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` bigint(20), `title` varchar(25) NOT NULL, `author` varchar(16) NOT NULL, `pages` varchar(1000) NOT NULL, `created` timestamp default CURRENT_TIMESTAMP, `creator` varchar(16) NOT NULL, PRIMARY KEY  (`id`));";
+                    String query = "CREATE TABLE IF NOT EXISTS `cb_books` ( `id` INTEGER PRIMARY KEY, `title` varchar(25) NOT NULL, `author` varchar(16) NOT NULL, `pages` varchar(1000) NOT NULL, `created` timestamp default CURRENT_TIMESTAMP, `creator` varchar(16) NOT NULL);";
                     core.execute(query);
                 }
             } else {

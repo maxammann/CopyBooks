@@ -53,7 +53,14 @@ public class UnsignBookCommand extends GenericCommand {
             }
 
             try {
-                new CraftWrittenBook(item).unsign();
+                CraftWrittenBook book = new CraftWrittenBook(item);
+
+                if (!book.unsign()) {
+                    player.sendMessage("Book is not signed!");
+                    return;
+                }
+
+                player.setItemInHand(book.toItemStack(item.getAmount()));
             } catch (InvalidBookException e) {
                 CopyBooks.debug(null, e);
             }

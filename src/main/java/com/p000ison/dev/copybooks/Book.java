@@ -25,9 +25,9 @@ public class Book extends CraftWrittenBook {
     private long id;
     private String creator;
 
-    public Book(long id, String title, String author, ArrayList<String> pages, String creator)
+    public Book(long id, String title, String author, ArrayList<String> pages, String creator) throws InvalidBookException
     {
-        super(title, author, pages, creator);
+        super(title, author, pages);
         this.setId(id);
         this.setCreator(creator);
     }

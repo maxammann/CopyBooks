@@ -14,19 +14,22 @@ public class MySQLCore implements DBCore {
     private String username;
     private String password;
     private String database;
+    private int port;
 
     /**
      * @param host
      * @param database
      * @param username
      * @param password
+     * @param  port
      */
-    public MySQLCore(String host, String database, String username, String password)
+    public MySQLCore(String host, int port, String database, String username, String password)
     {
         this.database = database;
         this.host = host;
         this.username = username;
         this.password = password;
+        this.port = port;
 
         initialize();
     }
@@ -35,7 +38,7 @@ public class MySQLCore implements DBCore {
     {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://" + host + "/" + database, username, password);
+            connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
         } catch (ClassNotFoundException e) {
             CopyBooks.debug("ClassNotFoundException! " + e.getMessage());
         } catch (SQLException e) {
@@ -208,17 +211,18 @@ public class MySQLCore implements DBCore {
     /**
      * Check whether a colum exists
      *
+     * @param tabel
      * @param column
      * @return
      */
     @Override
-    public Boolean existsColumn(String tabell, String colum)
+    public Boolean existsColumn(String tabel, String column)
     {
         try {
-            ResultSet colums = getConnection().getMetaData().getColumns(null, null, tabell, colum);
+            ResultSet colums = getConnection().getMetaData().getColumns(null, null, tabel, column);
             return colums.next();
         } catch (SQLException e) {
-            CopyBooks.debug("Failed to check if colum '" + colum + "' exists: " + e.getMessage(), e);
+            CopyBooks.debug("Failed to check if colum '" + column + "' exists: " + e.getMessage(), e);
             return false;
         }
     }

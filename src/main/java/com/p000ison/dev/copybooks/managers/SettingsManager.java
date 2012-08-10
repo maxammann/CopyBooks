@@ -32,6 +32,8 @@ public class SettingsManager {
     private String user;
     private String password;
     private String db;
+    private int port;
+    private boolean onlyFirstJoin;
 
     public SettingsManager(CopyBooks plugin)
     {
@@ -40,11 +42,20 @@ public class SettingsManager {
         config.options().copyDefaults(true);
         plugin.saveConfig();
 
-        usesMySQL = config.getBoolean("sql.mysql");
+        load();
+    }
+
+    private void load()
+    {
+        usesMySQL = config.getBoolean("sql.mysql", false);
         host = config.getString("sql.host");
         user = config.getString("sql.user");
+        port = config.getInt("sql.port");
         password = config.getString("sql.password");
-        db = config.getString("sql.db");
+        db = config.getString("sql.database");
+        onlyFirstJoin = config.getBoolean("settings.only-on-first-join", true);
+
+        commands.clear();
 
         ConfigurationSection section = config.getConfigurationSection("commands");
 
@@ -58,13 +69,7 @@ public class SettingsManager {
         plugin.reloadConfig();
         config = plugin.getConfig();
 
-        commands.clear();
-
-        ConfigurationSection section = config.getConfigurationSection("commands");
-
-        for (String command : section.getKeys(false)) {
-            commands.put(command, new BookCommandHolder(section.getLong(command + ".id"), section.getString(command + ".message")));
-        }
+        load();
     }
 
     public long getIdByGroup(Player player)
@@ -115,5 +120,10 @@ public class SettingsManager {
     public String getDatabase()
     {
         return db;
+    }
+
+    public int getPort()
+    {
+        return port;
     }
 }

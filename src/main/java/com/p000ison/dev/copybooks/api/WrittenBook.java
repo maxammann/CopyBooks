@@ -16,7 +16,7 @@ public interface WrittenBook {
 
     public void setAuthor(String author);
 
-    public void setPages(java.util.ArrayList<String> pages);
+    public void setPages(java.util.ArrayList<String> pages) throws InvalidBookException;
 
     public boolean unsign();
 

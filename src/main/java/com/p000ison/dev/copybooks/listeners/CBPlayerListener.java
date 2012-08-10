@@ -58,6 +58,10 @@ public class CBPlayerListener implements Listener {
     {
         Player player = event.getPlayer();
 
+        if(player.hasPlayedBefore()) {
+            return;
+        }
+
         Book book = plugin.getStorageManager().retrieveBook(plugin.getSettingsManager().getIdByGroup(player));
 
         if (book == null) {
@@ -66,6 +70,7 @@ public class CBPlayerListener implements Listener {
 
 
         try {
+
             player.getInventory().addItem(book.toItemStack(1));
         } catch (InvalidBookException e) {
             CopyBooks.debug(null, e);
