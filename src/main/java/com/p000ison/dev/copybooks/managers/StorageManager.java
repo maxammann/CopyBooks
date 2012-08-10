@@ -43,7 +43,7 @@ public final class StorageManager {
     public void initiateDB()
     {
         if (plugin.getSettingsManager().usesMySQL()) {
-            core = new MySQLCore(plugin.getSettingsManager().getHost(), plugin.getSettingsManager().getDatabase(), plugin.getSettingsManager().getUser(), plugin.getSettingsManager().getPassword());
+            core = new MySQLCore(plugin.getSettingsManager().getHost(), plugin.getSettingsManager().getPort(), plugin.getSettingsManager().getDatabase(), plugin.getSettingsManager().getUser(), plugin.getSettingsManager().getPassword());
 
             if (core.checkConnection()) {
                 CopyBooks.debug("[CopyBooks] Connected successfully to MySQL Database");
