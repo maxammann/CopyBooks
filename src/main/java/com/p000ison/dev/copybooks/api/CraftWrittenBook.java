@@ -71,15 +71,13 @@ public class CraftWrittenBook implements WrittenBook {
     @Override
     public String getTitle()
     {
-        System.out.println((NBTTagString)tag.get("title"));
-
-        return ((NBTTagString) tag.get("title")).data;
+        return tag.getString("title");
     }
 
     @Override
     public String getAuthor()
     {
-        return ((NBTTagString) tag.get("author")).data;
+        return tag.getString("author");
     }
 
     @Override
@@ -99,14 +97,14 @@ public class CraftWrittenBook implements WrittenBook {
     @Override
     public void setTitle(String title)
     {
-        tag.set("author", new NBTTagString("title", title));
+        tag.setString("title", title);
 //        this.title = title;
     }
 
     @Override
     public void setAuthor(String author)
     {
-        tag.set("author", new NBTTagString("author", author));
+        tag.setString("author", author);
 //        this.author = author;
     }
 
