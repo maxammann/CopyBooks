@@ -39,7 +39,7 @@ public class DownloadCommand extends GenericCommand {
             try {
                 book = Helper.createBookFromURL(player.getName(), Helper.formatURL(args[0]), args[1], author);
             } catch (IOException e) {
-                player.sendMessage("Invalid URL!");
+                player.sendMessage("Invalid URL! [" + e.getMessage() + "]");
                 return;
             } catch (InvalidBookException e) {
                 player.sendMessage("Failed to create book!");

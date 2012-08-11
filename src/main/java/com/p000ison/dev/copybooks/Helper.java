@@ -79,7 +79,7 @@ public class Helper {
     }
 
     public static String formatURL(String url) {
-        if (url.startsWith("http://")) {
+        if (!url.startsWith("http://")) {
             url = "http://" + url;
         }
 
