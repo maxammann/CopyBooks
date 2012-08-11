@@ -1,7 +1,5 @@
 package com.p000ison.dev.copybooks;
 
-import com.avaje.ebeaninternal.server.type.ScalarTypeBoolean;
-
 /**
  * Represents a BookCommandHolder
  */

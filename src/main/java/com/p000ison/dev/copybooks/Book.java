@@ -15,7 +15,6 @@ import com.p000ison.dev.copybooks.api.InvalidBookException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +31,7 @@ public class Book extends CraftWrittenBook {
         this.setId(id);
         this.setCreator(creator);
     }
+
 
     public Book(String title, String author, List<String> pages, String creator) throws InvalidBookException
     {
@@ -77,5 +77,32 @@ public class Book extends CraftWrittenBook {
     public void setCreator(String creator)
     {
         this.creator = creator;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return (int) getId() * getTitle().length();
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        Book book;
+        if (obj instanceof Book) {
+            book = (Book) obj;
+        } else {
+            return false;
+        }
+
+        if (id != book.getId()) {
+            return false;
+        }
+
+        if (!getTitle().equals(book.getTitle())) {
+            return false;
+        }
+
+        return true;
     }
 }

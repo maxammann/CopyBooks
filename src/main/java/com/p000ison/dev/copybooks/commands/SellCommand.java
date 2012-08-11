@@ -42,6 +42,11 @@ public class SellCommand extends GenericCommand {
                 return;
             }
 
+            if (player.equals(opponent)) {
+                player.sendMessage("You can not trade with yourself!");
+                return;
+            }
+
             long id;
 
             try {
@@ -61,6 +66,7 @@ public class SellCommand extends GenericCommand {
             }
 
             player.sendMessage("Opened a transaction with " + opponent.getName());
+            opponent.sendMessage(player.getName() + " opened a transaction with you!");
             plugin.getEconomyManager().addTransaction(player.getName(), opponent.getName(), id, price, amount);
         }
     }

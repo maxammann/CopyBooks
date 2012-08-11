@@ -16,18 +16,16 @@ import com.p000ison.dev.copybooks.managers.CommandManager;
 import com.p000ison.dev.copybooks.managers.EconomyManager;
 import com.p000ison.dev.copybooks.managers.SettingsManager;
 import com.p000ison.dev.copybooks.managers.StorageManager;
-
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Max

@@ -6,15 +6,16 @@ import com.p000ison.dev.copybooks.Helper;
 import com.p000ison.dev.copybooks.storage.DBCore;
 import com.p000ison.dev.copybooks.storage.MySQLCore;
 import com.p000ison.dev.copybooks.storage.SQLiteCore;
+import org.bukkit.ChatColor;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
-
-import org.bukkit.ChatColor;
 
 /**
  * @author phaed
@@ -25,6 +26,7 @@ public final class StorageManager {
     private DBCore core;
     private PreparedStatement insertBook, deleteBookByAuthor, deleteBookById,
             deleteBookByTitle, updateBookById, updateBookByTitle, retrieveBookById;
+    private Map<Long, Book> cache = new HashMap<Long, Book>();
 
     /**
      *
@@ -172,6 +174,12 @@ public final class StorageManager {
 
     public Book retrieveBook(long id)
     {
+        Book cacheId = cache.get(id);
+
+        if (cacheId != null) {
+            return cacheId;
+        }
+
         try {
             retrieveBookById.setLong(1, id);
             ResultSet res = retrieveBookById.executeQuery();
@@ -179,7 +187,10 @@ public final class StorageManager {
             if (res != null) {
                 while (res.next()) {
                     try {
-                        return new Book(res.getLong("id"), res.getString("title"), res.getString("author"), Helper.fromJSONStringtoList("pages", res.getString("pages")), res.getString("creator"));
+                        long iddb = res.getLong("id");
+                        Book book = new Book(iddb, res.getString("title"), res.getString("author"), Helper.fromJSONStringtoList("pages", res.getString("pages")), res.getString("creator"));
+                        cache.put(iddb, book);
+                        return book;
                     } catch (Exception ex) {
                         CopyBooks.debug(null, ex);
                     }

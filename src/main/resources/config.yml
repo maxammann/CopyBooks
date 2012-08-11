@@ -1,7 +1,13 @@
 groups:
-  Admin: 1
-  default: 2
-  Member: 3
+  Admin:
+  - 1
+  - 2
+  - 3
+  default:
+  - 3
+  - 7
+  Member:
+  . 7
 commands:
     rules:
       id: 7

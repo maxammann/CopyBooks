@@ -10,13 +10,8 @@
  */
 package com.p000ison.dev.copybooks.commands;
 
-import com.p000ison.dev.copybooks.Book;
-import com.p000ison.dev.copybooks.ChatBlock;
 import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.GenericCommand;
-
-import java.util.List;
-
 import org.bukkit.command.CommandSender;
 
 /**

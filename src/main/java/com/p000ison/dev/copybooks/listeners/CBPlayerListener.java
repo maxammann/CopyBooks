@@ -24,15 +24,12 @@ import com.p000ison.dev.copybooks.*;
 import com.p000ison.dev.copybooks.api.InvalidBookException;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -62,18 +59,18 @@ public class CBPlayerListener implements Listener {
             return;
         }
 
-        Book book = plugin.getStorageManager().retrieveBook(plugin.getSettingsManager().getIdByGroup(player));
+        for (long id : plugin.getSettingsManager().getIdsByGroup(player)) {
+            Book book = plugin.getStorageManager().retrieveBook(id);
 
-        if (book == null) {
-            return;
-        }
+            if (book == null) {
+                continue;
+            }
 
-
-        try {
-
-            player.getInventory().addItem(book.toItemStack(1));
-        } catch (InvalidBookException e) {
-            CopyBooks.debug(null, e);
+            try {
+                player.getInventory().addItem(book.toItemStack(1));
+            } catch (InvalidBookException e) {
+                CopyBooks.debug(null, e);
+            }
         }
     }
 
@@ -94,7 +91,7 @@ public class CBPlayerListener implements Listener {
             String[] lines = ((Sign) block.getState()).getLines();
             if (action.equals(Action.RIGHT_CLICK_BLOCK)) {
 
-                if (lines[0].equalsIgnoreCase("[CopyBooks]")) {
+                if (lines[0].equalsIgnoreCase(ChatColor.GREEN + "[CopyBooks]")) {
                     if (lines[1].equals("")) {
                         return;
                     }

@@ -13,9 +13,6 @@ package com.p000ison.dev.copybooks.commands;
 import com.p000ison.dev.copybooks.Book;
 import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.GenericCommand;
-
-import java.util.ArrayList;
-
 import com.p000ison.dev.copybooks.api.InvalidBookException;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;

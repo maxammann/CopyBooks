@@ -17,6 +17,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -64,7 +65,7 @@ public class SettingsManager {
         }
     }
 
-    private void reload()
+    public void reload()
     {
         plugin.reloadConfig();
         config = plugin.getConfig();
@@ -72,7 +73,7 @@ public class SettingsManager {
         load();
     }
 
-    public long getIdByGroup(Player player)
+    public List<Long> getIdsByGroup(Player player)
     {
         ConfigurationSection section = config.getConfigurationSection("groups");
 
@@ -81,14 +82,14 @@ public class SettingsManager {
         try {
             group = CopyBooks.getPermission().getPrimaryGroup(player);
         } catch (UnsupportedOperationException ex) {
-            return section.getLong("default");
+            return section.getLongList("default");
         }
 
         if (group == null) {
-            return section.getLong("default");
+            return section.getLongList("default");
         }
 
-        return section.getLong(group);
+        return section.getLongList(group);
     }
 
     public BookCommandHolder getCommand(String command)

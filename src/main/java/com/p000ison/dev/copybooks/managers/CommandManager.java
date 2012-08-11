@@ -2,11 +2,10 @@ package com.p000ison.dev.copybooks.managers;
 
 import com.p000ison.dev.copybooks.Command;
 import com.p000ison.dev.copybooks.CopyBooks;
-
-import java.util.*;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+
+import java.util.*;
 
 /**
  * @author phaed

@@ -1,10 +1,12 @@
 package com.p000ison.dev.copybooks.commands;
 
-import com.p000ison.dev.copybooks.*;
+import com.p000ison.dev.copybooks.Book;
+import com.p000ison.dev.copybooks.CopyBooks;
+import com.p000ison.dev.copybooks.GenericCommand;
+import com.p000ison.dev.copybooks.Helper;
 import com.p000ison.dev.copybooks.api.InvalidBookException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 
