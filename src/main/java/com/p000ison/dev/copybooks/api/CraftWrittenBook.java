@@ -20,7 +20,7 @@ public class CraftWrittenBook implements WrittenBook {
 //    private ArrayList<String> pages;
 
 
-    public CraftWrittenBook(String title, String author, ArrayList<String> pages) throws InvalidBookException
+    public CraftWrittenBook(String title, String author, List<String> pages) throws InvalidBookException
     {
         tag = new NBTTagCompound();
 
@@ -109,7 +109,7 @@ public class CraftWrittenBook implements WrittenBook {
     }
 
     @Override
-    public void setPages(ArrayList<String> pages) throws InvalidBookException
+    public void setPages(List<String> pages) throws InvalidBookException
     {
         NBTTagList list = new NBTTagList();
         for (String page : pages) {

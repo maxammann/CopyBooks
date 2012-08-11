@@ -6,3 +6,12 @@ commands:
     rules:
       id: 7
       message: 'Here are the rules'
+settings:
+  only-on-first-join: true
+sql:
+  mysql: false
+  host: 'localhost'
+  port: 3306
+  user: 'minecraft'
+  password: 'password'
+  database: 'copybooks'

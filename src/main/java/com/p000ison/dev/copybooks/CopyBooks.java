@@ -94,6 +94,7 @@ public class CopyBooks extends JavaPlugin {
         commandManager.addCommand(new CopyBookCommand(this, "Copy"));
         commandManager.addCommand(new ListCommand(this, "List"));
         commandManager.addCommand(new CreateBookCommand(this, "Create"));
+        commandManager.addCommand(new DownloadCommand(this, "Download"));
         commandManager.addCommand(new UnsignBookCommand(this, "Unsign"));
         commandManager.addCommand(new RemoveBookCommand(this, "Remove"));
         commandManager.addCommand(new HelpCommand(this, "Help"));
@@ -110,22 +111,22 @@ public class CopyBooks extends JavaPlugin {
         return (getPermission() != null);
     }
 
-    public static void main(String[] args)
-    {
-
-        String test = "aweifjewlktnsklfd";
-
-        char[] oldChars = test.toCharArray();
-        int length = oldChars.length;
-
-        char[] newChars = new char[length];
-        for (int i = 0; i < length; i++) {
-            char c = (char) (oldChars[i] - 32);
-            newChars[i] = c;
-        }
-
-        System.out.println(String.valueOf(newChars));
-    }
+//    public static void main(String[] args)
+//    {
+//
+//        String test = "aweifjewlktnsklfd";
+//
+//        char[] oldChars = test.toCharArray();
+//        int length = oldChars.length;
+//
+//        char[] newChars = new char[length];
+//        for (int i = 0; i < length; i++) {
+//            char c = (char) (oldChars[i] - 32);
+//            newChars[i] = c;
+//        }
+//
+//        System.out.println(String.valueOf(newChars));
+//    }
 
     public SettingsManager getSettingsManager()
     {

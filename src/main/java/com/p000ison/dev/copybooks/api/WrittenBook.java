@@ -10,13 +10,13 @@ public interface WrittenBook {
 
     public String getAuthor();
 
-    public java.util.ArrayList<String> getPages();
+    public java.util.List<String> getPages();
 
     public void setTitle(String title);
 
     public void setAuthor(String author);
 
-    public void setPages(java.util.ArrayList<String> pages) throws InvalidBookException;
+    public void setPages(java.util.List<String> pages) throws InvalidBookException;
 
     public boolean unsign();
 

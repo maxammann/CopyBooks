@@ -16,6 +16,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Max
@@ -25,11 +26,16 @@ public class Book extends CraftWrittenBook {
     private long id;
     private String creator;
 
-    public Book(long id, String title, String author, ArrayList<String> pages, String creator) throws InvalidBookException
+    public Book(long id, String title, String author, List<String> pages, String creator) throws InvalidBookException
     {
         super(title, author, pages);
         this.setId(id);
         this.setCreator(creator);
+    }
+
+    public Book(String title, String author, List<String> pages, String creator) throws InvalidBookException
+    {
+        this(-1, title, author, pages, creator);
     }
 
     public Book(ItemStack itemStack, String creator) throws InvalidBookException

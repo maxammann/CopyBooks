@@ -10,18 +10,18 @@
 */
 package com.p000ison.dev.copybooks;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
-import net.minecraft.server.NBTTagCompound;
+import com.p000ison.dev.copybooks.api.InvalidBookException;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
 /**
  * @author Max
@@ -39,6 +39,11 @@ public class Helper {
         json.put(key, array);
 
         return json.toString();
+    }
+
+    public static String removeColors(String text)
+    {
+        return text.replaceAll("[\u00a7][0-9a-f]", "");
     }
 
     public static int getAmontFromSign(char[] chars)
@@ -62,6 +67,53 @@ public class Helper {
         }
 
         return amount;
+    }
+
+    public static Book createBookFromURL(String creator, String url, String title, String author) throws IOException, InvalidBookException
+    {
+        if (author == null) {
+            author = creator;
+        }
+
+        return new Book(title, author, getPagesFromURL(url), creator);
+    }
+
+    public static String formatURL(String url) {
+        if (url.startsWith("http://")) {
+            url = "http://" + url;
+        }
+
+        return url;
+    }
+
+    public static List<String> getPagesFromURL(String site) throws IOException
+    {
+        URL url;
+        InputStream is;
+        BufferedReader reader;
+        List<String> pages = new ArrayList<String>();
+        char[] buffer = new char[256];
+        url = new URL(site);
+
+        is = url.openStream();
+        reader = new BufferedReader(new InputStreamReader(is));
+
+        int iterations = 0;
+
+        while (reader.read(buffer) != -1) {
+            iterations++;
+
+            if (iterations >= 50) {
+                break;
+            }
+
+            pages.add(new String(buffer));
+        }
+
+        if (is != null) {
+            is.close();
+        }
+        return pages;
     }
 
     public static long getIdFromSign(char[] chars)

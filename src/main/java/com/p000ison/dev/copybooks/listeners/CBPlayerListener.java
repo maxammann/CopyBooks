@@ -161,7 +161,7 @@ public class CBPlayerListener implements Listener {
 
     public static Transaction createTransactionFromString(String[] lines, String opponent)
     {
-        String requester = lines[0] + lines[1];
+        String requester = Helper.removeColors(lines[0] + lines[1]);
         char[] chars = lines[2].toCharArray();
 
         int amount = Helper.getAmontFromSign(chars);
@@ -285,7 +285,7 @@ public class CBPlayerListener implements Listener {
                         bookTitle = bookTitle.substring(0, bookTitleLength - 2) + "...";
                     }
 
-                    event.setLine(2, "[" + bookTitle + "]");
+                    event.setLine(1, "[" + bookTitle + "]");
                 } else {
                     String[] toFormat = lines[2].split(":");
                     String bookTitle = book.getTitle();
