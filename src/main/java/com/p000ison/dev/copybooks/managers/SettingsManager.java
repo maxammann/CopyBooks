@@ -35,6 +35,7 @@ public class SettingsManager {
     private String db;
     private int port;
     private boolean onlyFirstJoin;
+    private int cacheSize;
 
     public SettingsManager(CopyBooks plugin)
     {
@@ -55,13 +56,14 @@ public class SettingsManager {
         password = config.getString("sql.password");
         db = config.getString("sql.database");
         onlyFirstJoin = config.getBoolean("settings.only-on-first-join", true);
+        cacheSize = config.getInt("settings.cache-size");
 
         commands.clear();
 
         ConfigurationSection section = config.getConfigurationSection("commands");
 
         for (String command : section.getKeys(false)) {
-            commands.put(command, new BookCommandHolder(section.getLong(command + ".id"), section.getString(command + ".message")));
+            commands.put(command, new BookCommandHolder(section.getLong(command + ".id"), section.getString(command + ".message", null)));
         }
     }
 
@@ -131,5 +133,10 @@ public class SettingsManager {
     public boolean isOnlyFirstJoin()
     {
         return onlyFirstJoin;
+    }
+
+    public int getCacheSize()
+    {
+        return cacheSize;
     }
 }

@@ -12,10 +12,7 @@ import org.bukkit.ChatColor;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -27,7 +24,7 @@ public final class StorageManager {
     private DBCore core;
     private PreparedStatement insertBook, deleteBookByAuthor, deleteBookById,
             deleteBookByTitle, updateBookById, updateBookByTitle, retrieveBookById;
-    private Map<Long, Book> cache = new HashMap<Long, Book>();
+    private CacheMap<Long, Book> cache;
 
     /**
      *
@@ -35,6 +32,7 @@ public final class StorageManager {
     public StorageManager(CopyBooks plugin)
     {
         this.plugin = plugin;
+        cache = new CacheMap<Long, Book>(plugin.getSettingsManager().getCacheSize());
         initiateDB();
         updateDatabase();
         importFromDatabase();
@@ -190,6 +188,7 @@ public final class StorageManager {
                     try {
                         long iddb = res.getLong("id");
                         Book book = new Book(iddb, res.getString("title"), res.getString("author"), Helper.fromJSONStringtoList("pages", res.getString("pages")), res.getString("creator"));
+
                         cache.put(iddb, book);
                         return book;
                     } catch (Exception ex) {
