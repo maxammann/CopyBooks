@@ -7,7 +7,7 @@ groups:
   - 3
   - 7
   Member:
-  . 7
+  - 7
 commands:
     rules:
       id: 7
