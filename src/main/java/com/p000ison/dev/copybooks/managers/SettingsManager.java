@@ -10,8 +10,8 @@
 
 package com.p000ison.dev.copybooks.managers;
 
-import com.p000ison.dev.copybooks.BookCommandHolder;
 import com.p000ison.dev.copybooks.CopyBooks;
+import com.p000ison.dev.copybooks.objects.BookCommandHolder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;

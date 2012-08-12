@@ -21,7 +21,7 @@ public class MySQLCore implements DBCore {
      * @param database
      * @param username
      * @param password
-     * @param  port
+     * @param port
      */
     public MySQLCore(String host, int port, String database, String username, String password)
     {

@@ -1,7 +1,7 @@
 package com.p000ison.dev.copybooks.commands;
 
 import com.p000ison.dev.copybooks.CopyBooks;
-import com.p000ison.dev.copybooks.GenericCommand;
+import com.p000ison.dev.copybooks.objects.GenericCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

@@ -1,7 +1,7 @@
 package com.p000ison.dev.copybooks.managers;
 
 import com.p000ison.dev.copybooks.CopyBooks;
-import com.p000ison.dev.copybooks.Transaction;
+import com.p000ison.dev.copybooks.objects.Transaction;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;

@@ -1,4 +1,4 @@
-package com.p000ison.dev.copybooks;
+package com.p000ison.dev.copybooks.objects;
 
 /**
  * Represents a BasicBook

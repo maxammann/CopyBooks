@@ -20,8 +20,12 @@
  */
 package com.p000ison.dev.copybooks.listeners;
 
-import com.p000ison.dev.copybooks.*;
+import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.api.InvalidBookException;
+import com.p000ison.dev.copybooks.objects.Book;
+import com.p000ison.dev.copybooks.objects.BookCommandHolder;
+import com.p000ison.dev.copybooks.objects.Transaction;
+import com.p000ison.dev.copybooks.util.Helper;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -55,7 +59,7 @@ public class CBPlayerListener implements Listener {
     {
         Player player = event.getPlayer();
 
-        if(plugin.getSettingsManager().isOnlyFirstJoin() && !player.hasPlayedBefore()) {
+        if (plugin.getSettingsManager().isOnlyFirstJoin() && !player.hasPlayedBefore()) {
             return;
         }
 

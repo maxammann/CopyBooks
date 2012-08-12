@@ -8,7 +8,7 @@
  * California, 94105, USA.
  * 
  */
-package com.p000ison.dev.copybooks;
+package com.p000ison.dev.copybooks.objects;
 
 import com.p000ison.dev.copybooks.api.CraftWrittenBook;
 import com.p000ison.dev.copybooks.api.InvalidBookException;

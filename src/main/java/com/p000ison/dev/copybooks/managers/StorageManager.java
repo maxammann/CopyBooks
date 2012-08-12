@@ -1,18 +1,19 @@
 package com.p000ison.dev.copybooks.managers;
 
-import com.p000ison.dev.copybooks.BasicBook;
-import com.p000ison.dev.copybooks.Book;
 import com.p000ison.dev.copybooks.CopyBooks;
-import com.p000ison.dev.copybooks.Helper;
+import com.p000ison.dev.copybooks.objects.BasicBook;
+import com.p000ison.dev.copybooks.objects.Book;
 import com.p000ison.dev.copybooks.storage.DBCore;
 import com.p000ison.dev.copybooks.storage.MySQLCore;
 import com.p000ison.dev.copybooks.storage.SQLiteCore;
+import com.p000ison.dev.copybooks.util.Helper;
 import org.bukkit.ChatColor;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 /**

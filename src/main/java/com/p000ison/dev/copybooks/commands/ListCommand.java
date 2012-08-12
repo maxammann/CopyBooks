@@ -10,14 +10,16 @@
  */
 package com.p000ison.dev.copybooks.commands;
 
-import com.p000ison.dev.copybooks.*;
+import com.p000ison.dev.copybooks.CopyBooks;
+import com.p000ison.dev.copybooks.objects.BasicBook;
+import com.p000ison.dev.copybooks.objects.Book;
+import com.p000ison.dev.copybooks.objects.GenericCommand;
+import com.p000ison.dev.copybooks.util.ChatBlock;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * @author Max
