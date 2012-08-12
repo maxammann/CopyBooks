@@ -68,7 +68,7 @@ public class CreateBookCommand extends GenericCommand {
                 return;
             }
 
-            if (!Book.hasPermission(book, player)) {
+            if (!Book.hasPermission(book.getCreator(), player)) {
                 player.sendMessage("You dont have permisson for this boook!");
                 return;
             }

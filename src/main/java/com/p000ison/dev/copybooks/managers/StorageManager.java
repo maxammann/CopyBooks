@@ -1,5 +1,6 @@
 package com.p000ison.dev.copybooks.managers;
 
+import com.p000ison.dev.copybooks.BasicBook;
 import com.p000ison.dev.copybooks.Book;
 import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.Helper;
@@ -203,27 +204,20 @@ public final class StorageManager {
         return null;
     }
 
-    public List<Book> retrieveBooks(int min, int max)
+    public List<BasicBook> retrieveBooks(int min, int max)
     {
-        List<Book> out = new ArrayList<Book>();
+        List<BasicBook> out = new ArrayList<BasicBook>();
 
         String query = "SELECT * FROM  `cb_books` LIMIT " + min + ", " + max + ";";
 
-        //      Calendar calendar = Calendar.getInstance();
-        //     calendar.add(Calendar.WEEK_OF_YEAR, -2);
-        //  Date twoWeeksBefore = calendar.getTime();
-
         ResultSet res = core.select(query);
-
 
         if (res != null) {
             try {
                 while (res.next()) {
                     try {
-                        //   if (res.getTimestamp("insert_date").after(twoWeeksBefore)) {
-                        Book book = new Book(res.getLong("id"), res.getString("title"), res.getString("author"), Helper.fromJSONStringtoList("pages", res.getString("pages")), res.getString("creator"));
+                        BasicBook book = new BasicBook(res.getLong("id"), res.getString("title"), res.getString("author"), res.getString("creator"));
                         out.add(book);
-                        //         }
                     } catch (Exception ex) {
                         CopyBooks.debug(null, ex);
                     }

@@ -241,7 +241,7 @@ public class CBPlayerListener implements Listener {
                     return;
                 }
 
-                if (!Book.hasPermission(book, player)) {
+                if (!Book.hasPermission(book.getCreator(), player)) {
                     player.sendMessage("You dont have permission to this book!");
                     return;
                 }

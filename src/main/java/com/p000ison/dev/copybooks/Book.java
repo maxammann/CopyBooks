@@ -44,14 +44,14 @@ public class Book extends CraftWrittenBook {
         this.creator = creator;
     }
 
-    public static boolean hasPermission(Book book, CommandSender player)
+    public static boolean hasPermission(String bookCreator, CommandSender player)
     {
         if (player.hasPermission("cb.books.*")) {
             return true;
         }
 
         if (player.hasPermission("cb.books.own")) {
-            if (book.getCreator().equals(player.getName())) {
+            if (bookCreator.equals(player.getName())) {
                 return true;
             }
         }

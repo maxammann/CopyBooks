@@ -10,15 +10,14 @@
  */
 package com.p000ison.dev.copybooks.commands;
 
-import com.p000ison.dev.copybooks.Book;
-import com.p000ison.dev.copybooks.ChatBlock;
-import com.p000ison.dev.copybooks.CopyBooks;
-import com.p000ison.dev.copybooks.GenericCommand;
+import com.p000ison.dev.copybooks.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * @author Max
@@ -45,18 +44,18 @@ public class ListCommand extends GenericCommand {
             multiplier = Integer.parseInt(args[0]);
         }
 
-        List<Book> books = plugin.getStorageManager().retrieveBooks((multiplier - 1) * MAX_BOOKS_PER_PAGE, multiplier * MAX_BOOKS_PER_PAGE);
-        List<Book> sortedBooks = new ArrayList<Book>();
+        List<BasicBook> books = plugin.getStorageManager().retrieveBooks((multiplier - 1) * MAX_BOOKS_PER_PAGE, multiplier * MAX_BOOKS_PER_PAGE);
+        Iterator<BasicBook> it = books.iterator();
 
-        for (Book book : books) {
-            if (Book.hasPermission(book, sender)) {
-                sortedBooks.add(book);
+        while (it.hasNext()) {
+            BasicBook book = it.next();
+            if (Book.hasPermission(book.getCreator(), sender)) {
+                it.remove();
             }
         }
 
-        books = null;
 
-        if (sortedBooks.isEmpty()) {
+        if (books.isEmpty()) {
             sender.sendMessage("No books found!");
             return;
         }
@@ -73,7 +72,7 @@ public class ListCommand extends GenericCommand {
 
         chatBlock.addRow(ChatColor.AQUA + "  " + "ID", "Title", "Author", "Creator");
 
-        for (Book book : sortedBooks) {
+        for (BasicBook book : books) {
 
             if (book != null) {
                 String id = String.valueOf(book.getId());

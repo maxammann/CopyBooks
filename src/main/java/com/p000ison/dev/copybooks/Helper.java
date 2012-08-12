@@ -10,8 +10,13 @@
 */
 package com.p000ison.dev.copybooks;
 
+import com.p000ison.dev.copybooks.api.CraftWrittenBook;
 import com.p000ison.dev.copybooks.api.InvalidBookException;
+import com.p000ison.dev.copybooks.api.WrittenBook;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -71,16 +76,29 @@ public class Helper {
         return amount;
     }
 
-    public static Book createBookFromURL(String creator, String url, String title, String author) throws IOException, InvalidBookException
+    /**
+     * Creates a book from a url
+     *
+     * @param url    The url to copy it from
+     * @param title  The title of the book
+     * @param author The author
+     * @return A book with the content of the website
+     * @throws IOException
+     * @throws InvalidBookException
+     */
+    public static WrittenBook createBookFromURL(String url, String title, String author) throws IOException, InvalidBookException
     {
-        if (author == null) {
-            author = creator;
-        }
-
-        return new Book(title, author, getPagesFromURL(url), creator);
+        return new CraftWrittenBook(title, author, getPagesFromURL(url));
     }
 
-    public static String formatURL(String url) {
+    /**
+     * Formats a URL
+     *
+     * @param url
+     * @return Returns the formatted one
+     */
+    public static String formatURL(String url)
+    {
         if (!url.startsWith("http://")) {
             url = "http://" + url;
         }
@@ -88,6 +106,82 @@ public class Helper {
         return url;
     }
 
+    /**
+     * Removes a item from a inventory
+     *
+     * @param inventory The inventory to remove from.
+     * @param mat       The material to remove .
+     * @param amount    The amount to remove.
+     * @param damage    The data value or -1 if this does not matter.
+     * @return If the inventory has not enough items, this will return the amount of items which were not removed.
+     */
+    public static int remove(Inventory inventory, Material mat, int amount, short damage)
+    {
+        ItemStack[] contents = inventory.getContents();
+        int removed = 0;
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack item = contents[i];
+
+            if (item == null || !item.getType().equals(mat)) {
+                continue;
+            }
+
+            if (damage != (short) -1 && item.getDurability() != damage) {
+                continue;
+            }
+
+            int remove = item.getAmount() - amount - removed;
+
+            if (removed > 0) {
+                removed = 0;
+            }
+
+            if (remove <= 0) {
+                removed += Math.abs(remove);
+                contents[i] = null;
+            } else {
+                item.setAmount(remove);
+            }
+        }
+        return removed;
+    }
+
+
+    /**
+     * Checks weather the inventory contains a item or not.
+     *
+     * @param inventory The inventory to check..
+     * @param mat       The material to check .
+     * @param amount    The amount to check.
+     * @param damage    The data value or -1 if this does not matter.
+     * @return The amount of items the player has not. If this return 0 then the check was successfull.
+     */
+    public static int contains(Inventory inventory, Material mat, int amount, short damage)
+    {
+        ItemStack[] contents = inventory.getContents();
+        int searchAmount = 0;
+        for (ItemStack item : contents) {
+
+            if (item == null || !item.getType().equals(mat)) {
+                continue;
+            }
+
+            if (damage != -1 && item.getDurability() == damage) {
+                continue;
+            }
+
+            searchAmount += item.getAmount();
+        }
+        return searchAmount - amount;
+    }
+
+    /**
+     * Reads pages from a website and adds them to a list
+     *
+     * @param site The url to read from
+     * @return The created pages from this website
+     * @throws IOException
+     */
     public static List<String> getPagesFromURL(String site) throws IOException
     {
         URL url;

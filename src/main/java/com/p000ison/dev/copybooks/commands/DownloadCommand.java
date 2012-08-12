@@ -5,6 +5,7 @@ import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.GenericCommand;
 import com.p000ison.dev.copybooks.Helper;
 import com.p000ison.dev.copybooks.api.InvalidBookException;
+import com.p000ison.dev.copybooks.api.WrittenBook;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -29,17 +30,16 @@ public class DownloadCommand extends GenericCommand {
         if (sender instanceof Player) {
             Player player = (Player) sender;
 
-            String author = null;
+            String author = player.getName();
 
             if (args.length == 3) {
                 author = args[2];
             }
 
-            Book book = null;
-
+            WrittenBook book;
 
             try {
-                book = Helper.createBookFromURL(player.getName(), Helper.formatURL(args[0]), args[1], author);
+                book = Helper.createBookFromURL(author, Helper.formatURL(args[0]), args[1]);
             } catch (IOException e) {
                 player.sendMessage("Invalid URL! [" + e.getMessage() + "]");
                 return;
