@@ -11,6 +11,7 @@
 package com.p000ison.dev.copybooks;
 
 import com.p000ison.dev.copybooks.commands.*;
+import com.p000ison.dev.copybooks.listeners.CBBlockListener;
 import com.p000ison.dev.copybooks.listeners.CBPlayerListener;
 import com.p000ison.dev.copybooks.managers.CommandManager;
 import com.p000ison.dev.copybooks.managers.EconomyManager;
@@ -64,7 +65,6 @@ public class CopyBooks extends JavaPlugin {
         return permission;
     }
 
-
     @Override
     public void onEnable()
     {
@@ -77,6 +77,7 @@ public class CopyBooks extends JavaPlugin {
         setupManagers();
 
         pm.registerEvents(new CBPlayerListener(this), this);
+        pm.registerEvents(new CBBlockListener(this), this);
         super.onEnable();
     }
 
