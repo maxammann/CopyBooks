@@ -91,8 +91,11 @@
                         <configuration>
                             <artifactSet>
                                 <excludes>
-                                    <exclude>org/bukkit/**</exclude>
-                                    <exclude>net/milkbowl/vault**</exclude>
+                                    <exclude>org.bukkit:bukkit</exclude>
+                                    <exclude>org.bukkit:craftbukkit</exclude>
+                                    <exclude>org.hamcrest:hamcrest-core</exclude>
+                                    <exclude>org.bukkit:minecraft-server</exclude>
+                                    <exclude>net.milkbowl.vault:Vault</exclude>
                                 </excludes>
                             </artifactSet>
                         </configuration>
