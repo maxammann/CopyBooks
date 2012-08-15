@@ -90,11 +90,9 @@
                         </goals>
                         <configuration>
                             <artifactSet>
-                                <includes>
-                                    <include>org/spout/spoutnbt/**</include>
-                                </includes>
                                 <excludes>
-                                    <exclude>**</exclude>
+                                    <exclude>org/bukkit/**</exclude>
+                                    <exclude>net/milkbowl/vault**</exclude>
                                 </excludes>
                             </artifactSet>
                         </configuration>
