@@ -99,6 +99,7 @@ public class CopyBooks extends JavaPlugin {
         commandManager.addCommand(new HelpCommand(this, "Help"));
         commandManager.addCommand(new SellCommand(this, "Sell"));
         commandManager.addCommand(new AcceptCommand(this, "Accept"));
+        commandManager.addCommand(new SaveCommand(this, "Save"));
     }
 
     private boolean setupPermissions()

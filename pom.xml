@@ -1,5 +1,5 @@
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.p000ison.dev.copybooks</groupId>
     <artifactId>CopyBooks</artifactId>
@@ -12,7 +12,7 @@
         <mcVersion>1.2.5</mcVersion>
         <project.build.number>UNKNOWN</project.build.number>
     </properties>
-    
+
     <!-- Source code -->
     <scm>
         <connection>scm:git:git://github.com/p000ison/${project.name}.git</connection>
@@ -25,7 +25,7 @@
         <system>jenkins</system>
         <url>http://jenkins.thebigdigmc.info/job/${project.name}</url>
     </ciManagement>
-    
+
     <profiles>
         <profile>
             <id>jenkins</id>
@@ -39,16 +39,16 @@
             </properties>
         </profile>
     </profiles>
-    
+
     <build>
-        
+
         <finalName>
             ${project.artifactId}-${project.version}_b${project.build.number}
         </finalName>
-        
+
         <defaultGoal>clean install</defaultGoal>
-        
-	<!-- Resources -->
+
+        <!-- Resources -->
         <resources>
             <resource>
                 <targetPath>.</targetPath>
@@ -61,9 +61,9 @@
                 </includes>
             </resource>
         </resources>
-		
-	<!-- Plugins -->
-        <plugins>        
+
+        <!-- Plugins -->
+        <plugins>
             <!-- Compilation plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -77,14 +77,35 @@
                     <fork>true</fork>
                 </configuration>
             </plugin>
-            
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.7.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>org/spout/spoutnbt/**</include>
+                                </includes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- JAR creation plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.2</version>				
+                <version>2.3.2</version>
                 <configuration>
-              <!--      <outputDirectory>${basedir}/out/</outputDirectory> -->
+                    <!--      <outputDirectory>${basedir}/out/</outputDirectory> -->
                 </configuration>
             </plugin>
             <plugin>
@@ -111,7 +132,7 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <!-- Dependencies -->
     <dependencies>
         <dependency>
@@ -141,12 +162,18 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>org.spout</groupId>
+            <artifactId>spoutnbt</artifactId>
+            <version>dev-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
             <version>1.2.16-SNAPSHOT</version>
         </dependency>
     </dependencies>
-    
+
     <!-- Repositories -->
     <repositories>
         <repository>

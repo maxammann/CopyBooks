@@ -19,6 +19,10 @@ public class CraftWrittenBook implements WrittenBook {
 //    private String author;
 //    private ArrayList<String> pages;
 
+    public CraftWrittenBook()
+    {
+
+    }
 
     public CraftWrittenBook(String title, String author, List<String> pages) throws InvalidBookException
     {
