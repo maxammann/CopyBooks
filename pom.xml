@@ -96,6 +96,8 @@
                                     <exclude>org.hamcrest:hamcrest-core</exclude>
                                     <exclude>org.bukkit:minecraft-server</exclude>
                                     <exclude>net.milkbowl.vault:Vault</exclude>
+                                    <exclude>com.googlecode.json-simple:json-simple</exclude>
+                                    <exclude>junit:junit</exclude>
                                 </excludes>
                             </artifactSet>
                         </configuration>
