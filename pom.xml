@@ -93,6 +93,9 @@
                                 <includes>
                                     <include>org/spout/spoutnbt/**</include>
                                 </includes>
+                                <excludes>
+                                    <exclude>**</exclude>
+                                </excludes>
                             </artifactSet>
                         </configuration>
                     </execution>
