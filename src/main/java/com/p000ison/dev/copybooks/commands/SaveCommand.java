@@ -27,6 +27,7 @@ public class SaveCommand extends GenericCommand {
         setArgumentRange(3, 4);
         setUsages("/cb save <file> <format> <iih/id> [id]");
         setPermissions("cb.commands.save");
+        setIdentifiers("save");
     }
 
     @Override
