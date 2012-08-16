@@ -89,7 +89,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <shadedArtifactAttached>false</shadedArtifactAttached>
                             <artifactSet>
                                 <excludes>
                                     <exclude>org.bukkit:bukkit</exclude>

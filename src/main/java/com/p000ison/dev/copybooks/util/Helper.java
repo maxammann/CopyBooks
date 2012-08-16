@@ -200,7 +200,7 @@ public class Helper {
         while (reader.read(buffer) != -1) {
             iterations++;
 
-            if (iterations >= 50) {
+            if (iterations >= 1000) {
                 break;
             }
 

@@ -251,13 +251,15 @@ public class CBPlayerListener implements Listener {
                 }
 
                 String name = player.getName();
+                char secondLine = ' ';
 
                 if (lines[0].isEmpty()) {
-                    if (name.length() > 15) {
-                        event.setLine(0, name.substring(0, 15));
-                        event.setLine(1, name.substring(15, name.length()));
-                    } else {
+                    if (name.length() < 15) {
                         event.setLine(0, name);
+
+                    } else {
+                        event.setLine(0, name.substring(0, 15));
+                        secondLine = name.charAt(16);
                     }
                 } else {
                     if (!lines[0].equals(name)) {
@@ -280,14 +282,23 @@ public class CBPlayerListener implements Listener {
                     String bookTitle = book.getTitle();
 
                     int bookTitleLength = bookTitle.length();
-                    int test = 15 - bookTitleLength - 2;
+                    int test = 15 - bookTitleLength - 3; // [] and one one possible char
 
                     if (test < 0) {
-                        bookTitle = bookTitle.substring(0, bookTitleLength - 2) + "...";
+                        bookTitle = bookTitle.substring(0, bookTitleLength - 3) + "...";
                     }
 
-                    event.setLine(1, "[" + bookTitle + "]");
+                    bookTitle = "[" + bookTitle + "]";
+
+                    if (secondLine != ' ') {
+                        bookTitle += secondLine;
+                    }
+
+                    event.setLine(1, "");
                 } else {
+
+                }
+                {
                     String[] toFormat = lines[2].split(":");
                     String bookTitle = book.getTitle();
 
