@@ -3,12 +3,12 @@ package com.p000ison.dev.copybooks.listeners;
 import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.api.InvalidBookException;
 import org.bukkit.ChatColor;
-import org.bukkit.block.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Sign;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDispenseEvent;
-import org.bukkit.material.*;
 
 /**
  * Represents a CBBlockListener

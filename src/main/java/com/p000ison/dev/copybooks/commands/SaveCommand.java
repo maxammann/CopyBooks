@@ -7,13 +7,14 @@ import com.p000ison.dev.copybooks.objects.GenericCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.spout.nbt.stream.NBTOutputStream;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 
-import static com.p000ison.dev.copybooks.util.BookIO.*;
+import static com.p000ison.dev.copybooks.util.BookIO.writeBook;
+import static com.p000ison.dev.copybooks.util.BookIO.writeNBTBook;
 
 /**
  * Represents a SaveCommand
@@ -80,7 +81,7 @@ public class SaveCommand extends GenericCommand {
             }
 
             try {
-                writeNBTBook(book, file);
+                writeNBTBook(book, new FileOutputStream(file));
             } catch (IOException e) {
                 CopyBooks.debug(null, e);
             }
@@ -97,7 +98,7 @@ public class SaveCommand extends GenericCommand {
             }
 
             try {
-                writeBook(book.getPages(), file);
+                writeBook(book.getPages(), new FileWriter(file));
             } catch (IOException e) {
                 sender.sendMessage(ChatColor.RED + "Failed at saving file!");
             }

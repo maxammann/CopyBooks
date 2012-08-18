@@ -12,6 +12,7 @@ import org.spout.nbt.stream.NBTInputStream;
 import org.spout.nbt.stream.NBTOutputStream;
 
 import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,22 +22,23 @@ import java.util.List;
 public final class BookIO {
 
 
-    public static void writeBook(List<String> book, File file) throws IOException
+    public static void writeBook(List<String> book, Writer writer) throws IOException
     {
-        Writer writer = new FileWriter(file);
 
         for (String page : book) {
             writer.write(page + "\n");
         }
+
         writer.flush();
         writer.close();
     }
 
-    public static boolean writeNBTBook(WrittenBook book, File file) throws IOException
+    public static boolean writeNBTBook(WrittenBook book, FileOutputStream fileOutputStream) throws IOException
     {
-        NBTOutputStream outputStream = null;
+        NBTOutputStream outputStream;
+
         try {
-            outputStream = new NBTOutputStream(new FileOutputStream(file));
+            outputStream = new NBTOutputStream(fileOutputStream);
 
             List<Tag> contents = new ArrayList<Tag>();
 
@@ -66,11 +68,11 @@ public final class BookIO {
         }
     }
 
-    public static WrittenBook readNBTBook(File file) throws IOException
+    public static WrittenBook readNBTBook(FileInputStream fileInputStream) throws IOException
     {
-        NBTInputStream inputStream = null;
+        NBTInputStream inputStream;
         try {
-            inputStream = new NBTInputStream(new FileInputStream(file));
+            inputStream = new NBTInputStream(fileInputStream);
 
             CraftWrittenBook book = new CraftWrittenBook();
 
@@ -114,9 +116,8 @@ public final class BookIO {
         }
     }
 
-    public static List<String> readBook(File file) throws IOException, InvalidBookException
+    public static List<String> readBook(BufferedReader reader) throws IOException, InvalidBookException
     {
-        BufferedReader reader = new BufferedReader(new FileReader(file));
         List<String> list = new ArrayList<String>();
 
         String page;
@@ -128,5 +129,53 @@ public final class BookIO {
 
         reader.close();
         return list;
+    }
+
+    /**
+     * Reads pages from a stream unformated  and adds them to a list
+     *
+     * @param reader The input stream to reate the pages from
+     * @return The created pages from this stream
+     * @throws IOException
+     */
+    public static List<String> readUnformattedBook(Reader reader) throws IOException
+    {
+        List<String> pages = new ArrayList<String>();
+        char[] buffer = new char[256];
+
+        int iterations = 0;
+
+        while (reader.read(buffer) != -1) {
+            iterations++;
+
+            if (iterations >= 50) {
+                break;
+            }
+
+            pages.add(new String(buffer));
+        }
+
+        reader.close();
+
+        return pages;
+    }
+
+    /**
+     * Reads pages from a website unformated  and adds them to a list
+     *
+     * @param url The input url to read the pages from
+     * @return The created pages from this website
+     * @throws IOException
+     */
+    public static List<String> readBookUnformattedFromURL(String url) throws IOException
+    {
+        URL realURL = new URL(url);
+        InputStream is;
+        BufferedReader reader;
+
+        is = realURL.openStream();
+        reader = new BufferedReader(new InputStreamReader(is));
+
+        return readUnformattedBook(reader);
     }
 }
