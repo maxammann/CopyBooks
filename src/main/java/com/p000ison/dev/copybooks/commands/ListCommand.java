@@ -51,7 +51,7 @@ public class ListCommand extends GenericCommand {
 
         while (it.hasNext()) {
             BasicBook book = it.next();
-            if (Book.hasPermission(book.getCreator(), sender)) {
+            if (!Book.hasPermission(book.getCreator(), sender)) {
                 it.remove();
             }
         }

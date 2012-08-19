@@ -77,7 +77,7 @@ public class CopyBooks extends JavaPlugin {
         setupManagers();
 
         pm.registerEvents(new CBPlayerListener(this), this);
-        pm.registerEvents(new CBBlockListener(this), this);
+//        pm.registerEvents(new CBBlockListener(this), this);
         super.onEnable();
     }
 
@@ -100,6 +100,7 @@ public class CopyBooks extends JavaPlugin {
         commandManager.addCommand(new SellCommand(this, "Sell"));
         commandManager.addCommand(new AcceptCommand(this, "Accept"));
         commandManager.addCommand(new SaveCommand(this, "Save"));
+        commandManager.addCommand(new LoadCommand(this, "Load"));
     }
 
     private boolean setupPermissions()

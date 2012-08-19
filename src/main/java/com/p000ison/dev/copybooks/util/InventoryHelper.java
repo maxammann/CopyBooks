@@ -58,24 +58,25 @@ public class InventoryHelper {
      * @param durability the durability of the item to check or -1, if it does not matter
      * @return The available items of the item types that can be added
      */
-    public static int getAvailableSlots(Inventory inv, Material mat, short durability)
+    public static int getAvailableSlots(Inventory inv, Material mat, short durability, int maxStack)
     {
         int available = 0;
 
         for (ItemStack item : inv.getContents()) {
-            if (item == null) {
-                continue;
+
+            if (item != null) {
+                if (!item.getType().equals(mat)) {
+                    continue;
+                }
+
+                if (durability != -1 && item.getDurability() == durability) {
+                    continue;
+                }
+
+                available += maxStack - item.getAmount();
             }
 
-            if (!item.getType().equals(mat)) {
-                continue;
-            }
-
-            if (durability != -1 && item.getDurability() == durability) {
-                continue;
-            }
-
-            available += item.getMaxStackSize() - item.getAmount();
+            available += maxStack;
         }
 
         return available;
@@ -86,16 +87,17 @@ public class InventoryHelper {
 //
 //    }
 
-    public static boolean add(ItemStack[] inventory, ItemStack itemStack)
+    public static boolean add(Inventory inventory, ItemStack itemStack)
     {
-//        if (getAvailableSlots(inventory, itemStack.getType(), itemStack.getDurability()) < itemStack.getAmount()) {
-//            return false;
-//        }
+
+        if (getAvailableSlots(inventory, itemStack.getType(), itemStack.getDurability(), itemStack.getMaxStackSize()) < itemStack.getAmount()) {
+            return false;
+        }
 
         int max = itemStack.getMaxStackSize();
         int missing = itemStack.getAmount();
 
-        ItemStack[] contents = inventory;
+        ItemStack[] contents = inventory.getContents();
 
         for (int i = 0; i < contents.length; i++) {
             ItemStack item = contents[i];
@@ -123,33 +125,32 @@ public class InventoryHelper {
                 missing = 0;
             }
 
-            if (item == null) {
-                contents[i] = new ItemStack(itemStack.getType(), add, itemStack.getDurability());
-            } else {
-                contents[i].setAmount(add);
-            }
+            ItemStack currentItemStack = itemStack.clone();
+            currentItemStack.setAmount(add);
+            inventory.setItem(i, currentItemStack);
+
         }
         return true;
     }
 
-    public static void main(String[] args)
-    {
-
-        ItemStack itemStack = new ItemStack(1, 50);   //50
-
-        ItemStack[] contents = {new ItemStack(1, 20), new ItemStack(2, 20), new ItemStack(1, 64), new ItemStack(1, 20)};
-        long s = System.currentTimeMillis();
-        add(contents, itemStack);
-
-
-        long e = System.currentTimeMillis();
-
-        System.out.println(e-s);
-
-        for (ItemStack i : contents) {
-            System.out.println(i.getType() + " - " + i.getAmount());
-        }
-    }
+//    public static void main(String[] args)
+//    {
+//
+//        ItemStack itemStack = new ItemStack(1, 50);   //50
+//
+//        ItemStack[] contents = {new ItemStack(1, 20), new ItemStack(2, 20), new ItemStack(1, 64), new ItemStack(1, 20)};
+//        long s = System.currentTimeMillis();
+//        add(contents, itemStack);
+//
+//
+//        long e = System.currentTimeMillis();
+//
+//        System.out.println(e-s);
+//
+//        for (ItemStack i : contents) {
+//            System.out.println(i.getType() + " - " + i.getAmount());
+//        }
+//    }
 
 
     /**

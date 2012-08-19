@@ -15,13 +15,10 @@ import java.util.List;
  */
 public class CraftWrittenBook implements WrittenBook {
     private NBTTagCompound tag;
-//    private String title;
-//    private String author;
-//    private ArrayList<String> pages;
 
     public CraftWrittenBook()
     {
-
+        tag = new NBTTagCompound();
     }
 
     public CraftWrittenBook(String title, String author, List<String> pages) throws InvalidBookException
@@ -31,9 +28,6 @@ public class CraftWrittenBook implements WrittenBook {
         setTitle(title);
         setAuthor(author);
         setPages(pages);
-//        this.title = title;
-//        this.author = author;
-//        this.pages = pages;
     }
 
     public CraftWrittenBook(ItemStack itemStack) throws InvalidBookException
@@ -51,25 +45,8 @@ public class CraftWrittenBook implements WrittenBook {
         tag = itemStack.getHandle().getTag();
 
         if (tag == null) {
-            System.out.print("nul nulldskfndlf");
             tag = new NBTTagCompound();
         }
-
-//        author = tag.getString("author");
-//        title = tag.getString("title");
-//
-//        NBTTagList pages = tag.getList("pages");
-//        ArrayList<String> realPages = new ArrayList<String>();
-//
-//        for (int i = 0; i < pages.size(); i++) {
-//            String page = pages.get(i).getName();
-//            if (page.length() > 256) {
-//                throw new InvalidBookException("The maximum size of a page is 256!");
-//            }
-//            realPages.add(page);
-//        }
-//
-//        this.pages = realPages;
     }
 
     @Override
@@ -102,14 +79,12 @@ public class CraftWrittenBook implements WrittenBook {
     public void setTitle(String title)
     {
         tag.setString("title", title);
-//        this.title = title;
     }
 
     @Override
     public void setAuthor(String author)
     {
         tag.setString("author", author);
-//        this.author = author;
     }
 
     @Override
@@ -128,7 +103,7 @@ public class CraftWrittenBook implements WrittenBook {
             list.add(nbtPage);
         }
         tag.set("pages", list);
-//        this.pages = pages;
+
     }
 
     @Override
@@ -147,24 +122,6 @@ public class CraftWrittenBook implements WrittenBook {
     public ItemStack toItemStack(int amount) throws InvalidBookException
     {
         CraftItemStack item = new CraftItemStack(Material.WRITTEN_BOOK, amount);
-//        NBTTagCompound newBookData = new NBTTagCompound();
-//
-//        newBookData.setString("author", this.getAuthor());
-//        newBookData.setString("title", this.getTitle());
-//
-//        NBTTagList pages = new NBTTagList();
-//
-//        List<String> bookPages = this.getPages();
-//
-//        for (int i = 0; i < bookPages.size(); i++) {
-//            String page = bookPages.get(i);
-//            if (page.length() > 256) {
-//                throw new InvalidBookException("The maximum size of a page is 256!");
-//            }
-//            pages.add(new NBTTagString(String.valueOf(i), page));
-//        }
-//
-//        newBookData.set("pages", pages);
 
         item.getHandle().tag = tag;
 

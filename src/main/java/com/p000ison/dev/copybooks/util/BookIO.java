@@ -14,6 +14,7 @@ import org.spout.nbt.stream.NBTOutputStream;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -140,19 +141,31 @@ public final class BookIO {
      */
     public static List<String> readUnformattedBook(Reader reader) throws IOException
     {
-        List<String> pages = new ArrayList<String>();
         char[] buffer = new char[256];
-
-        int iterations = 0;
+        StringBuilder sb = new StringBuilder();
+        List<String> pages = new ArrayList<String>();
 
         while (reader.read(buffer) != -1) {
-            iterations++;
+            sb.append(buffer);
+        }
 
-            if (iterations >= 50) {
+        String[] lines = sb.toString().split("\\r?\\n");
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (String line : lines) {
+            stringBuilder.append(line);
+        }
+
+        String[] stringPages = Helper.splitByLength(stringBuilder.toString(), 256);
+
+        for (int i = 0; i < stringPages.length; i++) {
+
+            if (i == 50) {
                 break;
             }
 
-            pages.add(new String(buffer));
+            pages.add(stringPages[i]);
         }
 
         reader.close();

@@ -60,17 +60,29 @@ public class SaveCommand extends GenericCommand {
             }
 
             book = plugin.getStorageManager().retrieveBook(id);
+        } else {
+            sender.sendMessage(ChatColor.RED + "Mode not found!");
         }
 
         if (book == null) {
+            sender.sendMessage(ChatColor.RED + "Book not found!");
             return;
+        }
+
+        File dir = new File(plugin.getDataFolder(), "saves");
+
+        if (!dir.exists()) {
+            if (!dir.mkdir()) {
+                sender.sendMessage(ChatColor.RED + "Failed to create directory!");
+                return;
+            }
         }
 
         String fileName = args[0];
         String format = args[1];
 
         if (format.equalsIgnoreCase("nbt")) {
-            File file = new File(new File(plugin.getDataFolder(), "saves"), fileName + ".book");
+            File file = new File(dir, fileName + ".book");
 
             if (file.isDirectory()) {
                 return;
@@ -87,7 +99,7 @@ public class SaveCommand extends GenericCommand {
             }
 
         } else if (format.equalsIgnoreCase("text")) {
-            File file = new File(new File(plugin.getDataFolder(), "saves"), fileName + ".txt");
+            File file = new File(dir, fileName + ".txt");
 
             if (file.isDirectory()) {
                 return;
@@ -102,6 +114,8 @@ public class SaveCommand extends GenericCommand {
             } catch (IOException e) {
                 sender.sendMessage(ChatColor.RED + "Failed at saving file!");
             }
+        } else {
+            sender.sendMessage(ChatColor.RED + "Format not found!");
         }
     }
 }

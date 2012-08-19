@@ -20,9 +20,9 @@ public class DownloadCommand extends GenericCommand {
     public DownloadCommand(CopyBooks plugin, String name)
     {
         super(plugin, name);
-        setArgumentRange(3, 4);
+        setArgumentRange(2, 4);
         setIdentifiers("download", "dl");
-        setUsages("/cb download <default/pastebin> <url/pasteid> <title> [author] - Downloads a url from this page.");
+        setUsages("/cb download <default/pastebin> <url/pasteid> [title] [author] - Downloads a url from this page.");
     }
 
     @Override
@@ -38,6 +38,7 @@ public class DownloadCommand extends GenericCommand {
                 author = args[3];
             }
 
+
             WrittenBook book;
 
             String url = null;
@@ -52,8 +53,14 @@ public class DownloadCommand extends GenericCommand {
                 return;
             }
 
+            String title = url;
+
+            if (args.length >= 3) {
+                title = args[2];
+            }
+
             try {
-                book = new CraftWrittenBook(url, author, BookIO.readBookUnformattedFromURL(url));
+                book = new CraftWrittenBook(title, author, BookIO.readBookUnformattedFromURL(url));
             } catch (IOException e) {
                 player.sendMessage("Failed to connect to the url! [" + e.getMessage() + "]");
                 return;
