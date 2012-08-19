@@ -1,7 +1,0 @@
-name: CopyBooks
-main: com.p000ison.dev.copybooks.CopyBooks
-version: 1.0-bUNKNOWN
-softdepend: []
-permissions:
-commands:
-  copybooks:
