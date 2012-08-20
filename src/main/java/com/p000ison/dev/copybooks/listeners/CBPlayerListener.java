@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (C) 2012 p000ison
+ *
+ * This work is licensed under the Creative Commons
+ * Attribution-NonCommercial-NoDerivs 3.0 Unported License. To view a copy of
+ * this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send
+ * a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco,
+ * California, 94105, USA.
+ ******************************************************************************/
+
 /*
  * Copyright (C) 2012 p000ison
  *
@@ -27,7 +37,6 @@ import com.p000ison.dev.copybooks.objects.BookCommandHolder;
 import com.p000ison.dev.copybooks.objects.Transaction;
 import com.p000ison.dev.copybooks.util.Helper;
 import com.p000ison.dev.copybooks.util.InventoryHelper;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -98,7 +107,13 @@ public class CBPlayerListener implements Listener {
             if (action.equals(Action.RIGHT_CLICK_BLOCK)) {
 
                 if (lines[0].equalsIgnoreCase(ChatColor.GREEN + "[CopyBooks]")) {
-                    if (lines[1].equals("")) {
+
+                    if (!player.hasPermission("cb.signs.unlimited")) {
+                        player.sendMessage("You dont have permission!");
+                        return;
+                    }
+
+                    if (lines[1].isEmpty()) {
                         return;
                     }
 
@@ -128,11 +143,14 @@ public class CBPlayerListener implements Listener {
 
                 } else {
                     if (!detectSign(lines)) {
-                        System.out.print("no sign detected");
                         return;
                     }
 
-                    System.out.print("test");
+                    if (!player.hasPermission("cb.signs.buy")) {
+                        player.sendMessage("You dont have permission!");
+                        return;
+                    }
+
 
                     Transaction transaction = createTransactionFromString(lines, player.getName());
 
@@ -193,7 +211,13 @@ public class CBPlayerListener implements Listener {
 
         if (args.length == 1) {
             BookCommandHolder cmd = plugin.getSettingsManager().getCommand(args[0].trim());
+
             if (cmd == null) {
+                return;
+            }
+
+            if (!cmd.hasPermission(player)) {
+                player.sendMessage("You dont have permission!");
                 return;
             }
 
@@ -230,7 +254,7 @@ public class CBPlayerListener implements Listener {
 
         if (lines[0].equalsIgnoreCase("[CopyBooks]")) {
 
-            if (!player.hasPermission("cb.place.sign")) {
+            if (!player.hasPermission("cb.signs.place-unlimited")) {
                 event.setCancelled(true);
                 player.sendMessage("You are not allowed to place this sign!");
                 return;
@@ -246,7 +270,7 @@ public class CBPlayerListener implements Listener {
             event.setLine(0, ChatColor.GREEN + "[CopyBooks]");
         } else {
             if (detectSign(lines)) {
-                if (!player.hasPermission("cb.place.economy.sign")) {
+                if (!player.hasPermission("cb.signs.place-economy")) {
                     event.setCancelled(true);
                     return;
                 }

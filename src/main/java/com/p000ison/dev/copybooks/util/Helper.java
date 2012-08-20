@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (C) 2012 p000ison
+ *
+ * This work is licensed under the Creative Commons
+ * Attribution-NonCommercial-NoDerivs 3.0 Unported License. To view a copy of
+ * this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send
+ * a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco,
+ * California, 94105, USA.
+ ******************************************************************************/
+
 /*
 * Copyright (C) 2012 p000ison
 *
@@ -12,9 +22,6 @@ package com.p000ison.dev.copybooks.util;
 
 import com.p000ison.dev.copybooks.CopyBooks;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -90,7 +97,7 @@ public class Helper {
     /**
      * Formats a URL
      *
-     * @param url
+     * @param url The url to format
      * @return Returns the formatted one
      */
     public static String formatURL(String url)

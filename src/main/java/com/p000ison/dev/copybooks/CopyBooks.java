@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (C) 2012 p000ison
+ *
+ * This work is licensed under the Creative Commons
+ * Attribution-NonCommercial-NoDerivs 3.0 Unported License. To view a copy of
+ * this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send
+ * a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco,
+ * California, 94105, USA.
+ ******************************************************************************/
+
 /*
  * Copyright (C) 2012 p000ison
  * 
@@ -11,7 +21,6 @@
 package com.p000ison.dev.copybooks;
 
 import com.p000ison.dev.copybooks.commands.*;
-import com.p000ison.dev.copybooks.listeners.CBBlockListener;
 import com.p000ison.dev.copybooks.listeners.CBPlayerListener;
 import com.p000ison.dev.copybooks.managers.CommandManager;
 import com.p000ison.dev.copybooks.managers.EconomyManager;
@@ -81,6 +90,14 @@ public class CopyBooks extends JavaPlugin {
         super.onEnable();
     }
 
+    @Override
+    public void onDisable()
+    {
+        language = null;
+        storageManager.closeConnection();
+        super.onDisable();
+    }
+
     private void setupManagers()
     {
         settingsManager = new SettingsManager(this);
@@ -140,15 +157,6 @@ public class CopyBooks extends JavaPlugin {
         commandManager.executeAll(sender, command, label, args);
         return true;
 
-    }
-
-    @Override
-    public void onDisable()
-    {
-        ResourceBundle.clearCache(getClass().getClassLoader());
-        language = null;
-        storageManager.closeConnection();
-        super.onDisable();
     }
 
     public CommandManager getCommandManager()

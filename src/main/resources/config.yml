@@ -12,6 +12,7 @@ commands:
     rules:
       id: 7
       message: 'Here are the rules'
+      permission: 'test.permission.or.none'
 settings:
   only-on-first-join: true
 sql:

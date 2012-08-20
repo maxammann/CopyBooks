@@ -2,7 +2,74 @@ name: CopyBooks
 main: com.p000ison.dev.copybooks.CopyBooks
 version: maven-version-number
 softdepend: [ Vault ]
-permissions:
+author: p000ison
+database: false
 commands:
   copybooks:
-  cb:
+    description: Base command.
+    aliases: [ cb ]
+permissions:
+  cb.*:
+    children:
+      cb.command.help: true
+      cb.command.list: true
+      cb.command.remove: true
+      cb.command.sell: true
+      cb.command.accept: true
+      cb.signs.unlimited: true
+      cb.signs.buy: true
+      cb.signs.place-economy: true
+      cb.signs.place-unlimited: true
+      cb.signs.place-others: true
+      cb.admin.unsign: true
+      cb.admin.copy: true
+      cb.admin.create: true
+      cb.admin.download: true
+      cb.admin.save: true
+      cb.admin.load: true
+      cb.commands.*: true
+  cb.user:
+    children:
+      cb.command.help: true
+      cb.command.list: true
+      cb.command.remove: true
+      cb.command.sell: true
+      cb.command.accept: true
+      cb.signs.unlimited: true
+      cb.signs.buy: true
+      cb.signs.place-economy: true
+      cb.commands.*: true
+  cb.commands.*:
+    default: false
+  cb.command.help:
+    default: true
+  cb.command.list:
+    default: true
+  cb.command.remove:
+    default: false
+  cb.command.sell:
+    default: false
+  cb.command.accept:
+    default: false
+  cb.signs.unlimited:
+    default: false
+  cb.signs.buy:
+    default: false
+  cb.signs.place-economy:
+    default: false
+  cb.signs.place-unlimited:
+    default: op
+  cb.signs.place-others:
+    default: op
+  cb.admin.unsign:
+    default: op
+  cb.admin.copy:
+    default: op
+  cb.admin.create:
+    default: op
+  cb.admin.download:
+    default: op
+  cb.admin.save:
+    default: op
+  cb.admin.load:
+    default: op

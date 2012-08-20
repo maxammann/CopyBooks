@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (C) 2012 p000ison
+ *
+ * This work is licensed under the Creative Commons
+ * Attribution-NonCommercial-NoDerivs 3.0 Unported License. To view a copy of
+ * this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send
+ * a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco,
+ * California, 94105, USA.
+ ******************************************************************************/
+
 package com.p000ison.dev.copybooks.commands;
 
 import com.p000ison.dev.copybooks.CopyBooks;
@@ -9,9 +19,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-/**
- * Represents a AcceptCommand
- */
 public class AcceptCommand extends GenericCommand {
 
     public AcceptCommand(CopyBooks plugin, String name)
@@ -20,6 +27,7 @@ public class AcceptCommand extends GenericCommand {
         setArgumentRange(0, 0);
         setIdentifiers("accept");
         setUsages("/cb accept - Accept a book offer.");
+        setPermissions("cb.commands.accept");
     }
 
     @Override

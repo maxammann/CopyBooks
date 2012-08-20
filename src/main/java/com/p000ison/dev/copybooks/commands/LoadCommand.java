@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (C) 2012 p000ison
+ *
+ * This work is licensed under the Creative Commons
+ * Attribution-NonCommercial-NoDerivs 3.0 Unported License. To view a copy of
+ * this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send
+ * a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco,
+ * California, 94105, USA.
+ ******************************************************************************/
+
 /*
  * Copyright (C) 2012 p000ison
  *
@@ -14,7 +24,6 @@ import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.api.CraftWrittenBook;
 import com.p000ison.dev.copybooks.api.InvalidBookException;
 import com.p000ison.dev.copybooks.api.WrittenBook;
-import com.p000ison.dev.copybooks.objects.Book;
 import com.p000ison.dev.copybooks.objects.GenericCommand;
 import com.p000ison.dev.copybooks.util.InventoryHelper;
 import org.bukkit.ChatColor;
@@ -38,6 +47,7 @@ public class LoadCommand extends GenericCommand {
         setUsages("/cb load <file> <nbt/text> <title> <author> [mode]");
         setPermissions("cb.commands.load");
         setIdentifiers("load");
+        setPermissions("cb.admin.load");
     }
 
     @Override

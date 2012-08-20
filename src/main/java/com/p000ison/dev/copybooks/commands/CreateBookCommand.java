@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (C) 2012 p000ison
+ *
+ * This work is licensed under the Creative Commons
+ * Attribution-NonCommercial-NoDerivs 3.0 Unported License. To view a copy of
+ * this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send
+ * a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco,
+ * California, 94105, USA.
+ ******************************************************************************/
+
 /*
  * Copyright (C) 2012 p000ison
  * 
@@ -30,9 +40,11 @@ public class CreateBookCommand extends GenericCommand {
         setUsages("/cb create - Creates a book from a id");
         setArgumentRange(1, 2);
         setIdentifiers("create", "c");
+        setPermissions("cb.admin.create");
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void execute(CommandSender sender, String label, String[] args)
     {
         if (sender instanceof Player) {
@@ -73,7 +85,7 @@ public class CreateBookCommand extends GenericCommand {
                 return;
             }
 
-            ItemStack bookItem = null;
+            ItemStack bookItem;
             try {
                 bookItem = book.toItemStack(amount);
             } catch (InvalidBookException e) {
