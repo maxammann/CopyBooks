@@ -29,6 +29,11 @@ public class EconomyManager {
         }
     }
 
+    public boolean checkTransaction(Transaction transaction)
+    {
+        return economy.getBalance(transaction.getOpponent()) >= transaction.getPrice() * transaction.getAmount();
+    }
+
     public boolean executeTransaction(Transaction transaction)
     {
         return chargeMonay(transaction.getOpponent(), transaction.getPrice() * transaction.getAmount()) &&

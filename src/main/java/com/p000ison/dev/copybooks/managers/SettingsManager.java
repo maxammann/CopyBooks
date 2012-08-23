@@ -46,6 +46,7 @@ public class SettingsManager {
     private int port;
     private boolean onlyFirstJoin;
     private int cacheSize;
+    private boolean needSellBooks, needShopBooks;
 
     public SettingsManager(CopyBooks plugin)
     {
@@ -67,7 +68,8 @@ public class SettingsManager {
         db = config.getString("sql.database");
         onlyFirstJoin = config.getBoolean("settings.only-on-first-join", true);
         cacheSize = config.getInt("settings.cache-size");
-
+        needSellBooks = config.getBoolean("selling.need-books");
+        needShopBooks = config.getBoolean("shop.need-books");
         commands.clear();
 
         ConfigurationSection section = config.getConfigurationSection("commands");
@@ -148,5 +150,15 @@ public class SettingsManager {
     public int getCacheSize()
     {
         return cacheSize;
+    }
+
+    public boolean isNeedSellBooks()
+    {
+        return needSellBooks;
+    }
+
+    public boolean isNeedShopBooks()
+    {
+        return needShopBooks;
     }
 }

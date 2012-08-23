@@ -96,7 +96,7 @@ public final class StorageManager {
 //        deleteBookByAuthor = core.prepareStatement("DELETE FROM `cb_books` WHERE author = ?;");
         retrieveBookById = core.prepareStatement("SELECT * FROM `cb_books` WHERE id = ?;");
         retrieveBooks = core.prepareStatement("SELECT * FROM  `cb_books` LIMIT ?, ?;");
-        retrieveBooksByOwner = core.prepareStatement("SELECT * FROM  `cb_books` LIMIT ?, ? WHERE creator = ?;");
+        retrieveBooksByOwner = core.prepareStatement("SELECT * FROM  `cb_books` WHERE creator = ? LIMIT ?, ?;");
     }
 
     /**

@@ -287,47 +287,46 @@ public class CBPlayerListener implements Listener {
                     return;
                 }
 
-                String name = player.getName();
-                char secondLine = ' ';
 
-                if (lines[0].isEmpty()) {
-                    if (name.length() < 16) {
-                        event.setLine(0, name);
+                char charToAdd = ' ';
+
+                //if both lines are empty -> auto-generate
+                if (lines[0].isEmpty() && lines[1].isEmpty()) {
+                    //check for name lenght
+                    if (player.getName().length() <= 15) {
+                        event.setLine(0, player.getName());
                     } else {
-                        event.setLine(0, name.substring(0, 15));
-                        secondLine = name.charAt(16);
+                        event.setLine(0, player.getName().substring(0, 15));
+                        charToAdd = player.getName().charAt(16);
                     }
-                } else if (lines[0].equals(name) && !player.hasPermission("cb.admin.others")) {
-                    player.sendMessage("You dont have permission!");
-                    event.setCancelled(false);
-                    return;
-                } else if (lines[0].equals("[AdminShop]") && !player.hasPermission("cb.admin.adminshop")) {
-                    player.sendMessage("You dont have permission!");
-                    event.setCancelled(false);
-                    return;
+
+                } else if (!lines[0].isEmpty()) {
+                    //check for admin shop
+                    if (lines[0].equals("[AdminShop]") && !player.hasPermission("cb.admin.adminshop")) {
+                        player.sendMessage("You dont have permission!");
+                        event.setCancelled(false);
+                        return;
+                    }
+
+                    //if the second line is not empty we have to care about a char in the second line
+                    if (!lines[1].isEmpty()) {
+                        if (lines[1].charAt(0) != ' ') {
+                            charToAdd = lines[1].charAt(0);
+                        }
+                    }
+
+                    String wholeName = (charToAdd == ' ' ? "" : charToAdd) + lines[0];
+
+                    if (!wholeName.equals(player.getName()) && !player.hasPermission("cb.admin.others")) {
+                        player.sendMessage("You dont have permission!");
+                        event.setCancelled(false);
+                        return;
+                    }
                 }
 
+                event.setLine(1, generateSignBookTitle(book.getTitle(), charToAdd));
 
-                if (!lines[1].isEmpty() && secondLine == ' ') {
-                    secondLine = lines[1].charAt(0);
-                }
-
-                String bookTitle = book.getTitle();
-
-                int bookTitleLength = bookTitle.length();
-                int test = 15 - bookTitleLength - 7; // [] and one one possible char
-
-                if (test < 0) {
-                    bookTitle = bookTitle.substring(0, bookTitleLength - 7) + "...";
-                }
-
-                bookTitle = "[" + bookTitle + "]";
-
-                bookTitle = secondLine + bookTitle;
-
-
-                event.setLine(1, bookTitle);
-
+                //check for other lines
                 String[] idAndAmount = lines[2].split(":");
 
                 if (idAndAmount.length != 2) {
@@ -354,6 +353,18 @@ public class CBPlayerListener implements Listener {
                 player.sendMessage("CopyBooks economy sign created!");
             }
         }
+    }
+
+    public static String generateSignBookTitle(String bookTitle, char add)
+    {
+        int bookTitleLength = bookTitle.length();
+        int test = 15 - bookTitleLength - 7; // [] and one one possible char
+
+        if (test < 0) {
+            bookTitle = bookTitle.substring(0, bookTitleLength - 7) + "...";
+        }
+
+        return add + "[" + bookTitle + "]";
     }
 
 

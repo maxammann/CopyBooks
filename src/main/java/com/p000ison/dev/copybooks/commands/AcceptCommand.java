@@ -15,8 +15,11 @@ import com.p000ison.dev.copybooks.api.InvalidBookException;
 import com.p000ison.dev.copybooks.objects.Book;
 import com.p000ison.dev.copybooks.objects.GenericCommand;
 import com.p000ison.dev.copybooks.objects.Transaction;
+import com.p000ison.dev.copybooks.util.InventoryHelper;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class AcceptCommand extends GenericCommand {
@@ -50,7 +53,12 @@ public class AcceptCommand extends GenericCommand {
                 return;
             }
 
-            plugin.getEconomyManager().executeTransaction(transaction);
+            if (!plugin.getEconomyManager().checkTransaction(transaction)) {
+                player.sendMessage("You do not have enough money!");
+                requester.sendMessage(String.format("%s has not enough money!", player.getName()));
+                return;
+            }
+
 
             Book book = plugin.getStorageManager().retrieveBook(transaction.getBookId());
 
@@ -61,6 +69,7 @@ public class AcceptCommand extends GenericCommand {
             }
 
             ItemStack item = null;
+
             try {
                 item = book.toItemStack(transaction.getAmount());
             } catch (InvalidBookException e) {
@@ -72,7 +81,26 @@ public class AcceptCommand extends GenericCommand {
                 return;
             }
 
-            player.getInventory().addItem(item);
+            Inventory inv = player.getInventory();
+
+            int missing = InventoryHelper.contains(inv, Material.BOOK_AND_QUILL, transaction.getAmount(), (short) -1);
+
+            if (missing != 0) {
+                player.sendMessage(String.format("%d books are missing!", missing));
+                requester.sendMessage(String.format("%s is missing %d books are missing!", player.getName(), missing));
+                return;
+            }
+
+            if (InventoryHelper.getAvailableSlots(inv, Material.BOOK_AND_QUILL, (short)-1, 1) != 0) {
+                player.sendMessage("Please make a bit space in your inventory!");
+                requester.sendMessage("Other player has not enough space in his inventory!");
+                return;
+            }
+
+            plugin.getEconomyManager().executeTransaction(transaction);
+            InventoryHelper.add(inv, item);
+            InventoryHelper.remove(inv, Material.BOOK_AND_QUILL, transaction.getAmount(), (short) -1);
+            plugin.getEconomyManager().cancelTransactionByOpponent(player.getName());
 
             requester.sendMessage("Transaction successfull!");
             player.sendMessage("Transaction successfull!");

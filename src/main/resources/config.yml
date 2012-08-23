@@ -15,6 +15,11 @@ commands:
       permission: 'test.permission.or.none'
 settings:
   only-on-first-join: true
+  cache-size: 100
+shop:
+  need-books: true
+selling:
+  need-books: true
 sql:
   mysql: false
   host: 'localhost'
