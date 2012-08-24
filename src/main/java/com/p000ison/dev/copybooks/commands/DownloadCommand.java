@@ -17,6 +17,7 @@ import com.p000ison.dev.copybooks.api.WrittenBook;
 import com.p000ison.dev.copybooks.objects.GenericCommand;
 import com.p000ison.dev.copybooks.util.BookIO;
 import com.p000ison.dev.copybooks.util.Helper;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -24,13 +25,16 @@ import java.io.IOException;
 
 public class DownloadCommand extends GenericCommand {
 
+    private static final String pasteBinApi = "http://pastebin.com/raw.php?i=";
+
     public DownloadCommand(CopyBooks plugin, String name)
     {
         super(plugin, name);
-        setArgumentRange(2, 4);
+        setArgumentRange(3, 5);
         setIdentifiers("download", "dl");
-        setUsages("/cb dl <default/pastebin> <url/pasteid> [title] [author] - Downloads a book form a webpage.");
+        setUsages("/cb dl <default/pastebin> <url/pasteid> <id> [title] [author] - Downloads a book form a webpage.");
         setPermissions("cb.admin.download");
+        dependAnotherThread(true);
     }
 
     @Override
@@ -38,12 +42,22 @@ public class DownloadCommand extends GenericCommand {
     {
         if (sender instanceof Player) {
             Player player = (Player) sender;
+
+            long id;
+
+            try {
+                id = Long.parseLong(args[2]);
+            } catch (NumberFormatException e) {
+                sender.sendMessage(ChatColor.RED + plugin.getTranslation("book.id.failed"));
+                return;
+            }
+
             String mode = args[0];
 
             String author = player.getName();
 
-            if (args.length == 4) {
-                author = args[3];
+            if (args.length == 5) {
+                author = args[4];
             }
 
 
@@ -54,7 +68,7 @@ public class DownloadCommand extends GenericCommand {
             if (mode.equalsIgnoreCase("default")) {
                 url = Helper.formatURL(args[1]);
             } else if (mode.equalsIgnoreCase("pastebin")) {
-                url = "http://pastebin.com/raw.php?i=" + args[1];
+                url = pasteBinApi + args[1];
             }
 
             if (url == null) {
@@ -63,30 +77,25 @@ public class DownloadCommand extends GenericCommand {
 
             String title = url;
 
-            if (args.length >= 3) {
-                title = args[2];
+            if (args.length >= 4) {
+                title = args[3];
             }
 
             try {
                 book = new CraftWrittenBook(title, author, BookIO.readBookUnformattedFromURL(url));
             } catch (IOException e) {
-                player.sendMessage("Failed to connect to the url! [" + e.getMessage() + "]");
+                player.sendMessage(ChatColor.RED + String.format(plugin.getTranslation("url.failed.to.connect"), e.getMessage()));
                 return;
             } catch (InvalidBookException e) {
-                player.sendMessage("Failed to create book!");
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("book.create.failed"));
                 return;
             }
 
-            try {
-                player.getInventory().addItem(book.toItemStack(1));
-            } catch (InvalidBookException e) {
-                player.sendMessage("Failed to create book!");
-                return;
-            }
+            plugin.getStorageManager().insertBook(book, player.getName());
 
-            player.sendMessage("Book downloaded!");
+            player.sendMessage(ChatColor.RED + plugin.getTranslation("book.downloaded.pushed.to.db"));
         } else {
-
+            sender.sendMessage(ChatColor.RED + plugin.getTranslation("only.players"));
         }
     }
 }

@@ -22,13 +22,11 @@ package com.p000ison.dev.copybooks.commands;
 
 import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.objects.BasicBook;
-import com.p000ison.dev.copybooks.objects.Book;
 import com.p000ison.dev.copybooks.objects.GenericCommand;
 import com.p000ison.dev.copybooks.util.ChatBlock;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -42,7 +40,7 @@ public class ListCommand extends GenericCommand {
     {
         super(plugin, name);
         setPermissions("cb.command.list");
-        setUsages("/cb list - Lists all books");
+        setUsages("/cb list [own/page]- Lists all books");
         setArgumentRange(0, 1);
         setIdentifiers("list");
     }
@@ -51,16 +49,21 @@ public class ListCommand extends GenericCommand {
     public void execute(CommandSender sender, String label, String[] args)
     {
         int multiplier = 1;
+        boolean isOwn = false;
 
         if (args.length == 1) {
-            multiplier = Integer.parseInt(args[0]);
+            if (args[0].matches("[0-9]+")) {
+                multiplier = Integer.parseInt(args[0]);
+            } else if (args[0].equalsIgnoreCase("own")) {
+                isOwn = true;
+            }
         }
 
         String permCreator;
 
-        if (sender.hasPermission("cb.books.*")) {
+        if (!isOwn && sender.hasPermission("cb.books.*")) {
             permCreator = null;
-        } else if (sender.hasPermission("cb.books.own")) {
+        } else if (sender.hasPermission("cb.books.own") || isOwn) {
             permCreator = sender.getName();
         } else {
             sender.sendMessage(ChatColor.RED + "You don't have permission for any book!");
@@ -68,18 +71,9 @@ public class ListCommand extends GenericCommand {
         }
 
         List<BasicBook> books = plugin.getStorageManager().retrieveBooks((multiplier - 1) * MAX_BOOKS_PER_PAGE, multiplier * MAX_BOOKS_PER_PAGE, permCreator);
-        Iterator<BasicBook> it = books.iterator();
-
-        while (it.hasNext()) {
-            BasicBook book = it.next();
-            if (!Book.hasPermission(book.getCreator(), sender)) {
-                it.remove();
-            }
-        }
-
 
         if (books.isEmpty()) {
-            sender.sendMessage("No books found!");
+            sender.sendMessage(ChatColor.RED + plugin.getTranslation("no.books.found"));
             return;
         }
 

@@ -11,7 +11,9 @@
 package com.p000ison.dev.copybooks.commands;
 
 import com.p000ison.dev.copybooks.CopyBooks;
+import com.p000ison.dev.copybooks.objects.Book;
 import com.p000ison.dev.copybooks.objects.GenericCommand;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -39,19 +41,19 @@ public class SellCommand extends GenericCommand {
                 try {
                     amount = Integer.parseInt(args[1]);
                 } catch (NumberFormatException e) {
-                    player.sendMessage("The amount must be a number!");
+                    player.sendMessage(ChatColor.RED + plugin.getTranslation("failed.parsing.number"));
                     return;
                 }
             }
             Player opponent = plugin.getServer().getPlayer(args[0]);
 
             if (opponent == null) {
-                player.sendMessage("Player not found!");
+                player.sendMessage(ChatColor.RED + String.format(plugin.getTranslation("player.not.found"), args[0]));
                 return;
             }
 
             if (player.equals(opponent)) {
-                player.sendMessage("You can not trade with yourself!");
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("not.trade.with.yourself"));
                 return;
             }
 
@@ -60,7 +62,14 @@ public class SellCommand extends GenericCommand {
             try {
                 id = Long.parseLong(args[1]);
             } catch (NumberFormatException e) {
-                player.sendMessage("The id must be a number!");
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("book.id.failed"));
+                return;
+            }
+
+            Book book = plugin.getStorageManager().retrieveBook(id);
+
+            if (book == null) {
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("book.not.found"));
                 return;
             }
 
@@ -69,13 +78,16 @@ public class SellCommand extends GenericCommand {
             try {
                 price = Double.parseDouble(args[2]);
             } catch (NumberFormatException e) {
-                player.sendMessage("The price must be a number!");
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("price.number"));
                 return;
             }
 
-            player.sendMessage("Opened a transaction with " + opponent.getName());
-            opponent.sendMessage(player.getName() + " opened a transaction with you!");
+            player.sendMessage(ChatColor.GREEN + String.format(plugin.getTranslation("transaction.opened"), player.getDisplayName()));
+            opponent.sendMessage(ChatColor.GREEN + String.format(plugin.getTranslation("player.wants.to.sell"), player.getDisplayName(), book.getAuthor()));
+
             plugin.getEconomyManager().addTransaction(player.getName(), opponent.getName(), id, price, amount);
+        } else {
+            sender.sendMessage(ChatColor.RED + plugin.getTranslation("only.players"));
         }
     }
 }

@@ -88,7 +88,7 @@ public final class CommandManager {
         return new ArrayList<Command>(commands.values());
     }
 
-    public boolean executeAll(final CommandSender sender, org.bukkit.command.Command command, String label, String[] args)
+    public boolean executeAll(final CommandSender sender, org.bukkit.command.Command command, final String label, String[] args)
     {
         String[] arguments;
 
@@ -109,9 +109,9 @@ public final class CommandManager {
 
             //trim the last ' '
             identifier = identifier.trim();
-            for (Command cmd : commands.values()) {
+            for (final Command cmd : commands.values()) {
                 if (cmd.isIdentifier(identifier)) {
-                    String[] realArgs = Arrays.copyOfRange(arguments, argsIncluded, arguments.length);
+                    final String[] realArgs = Arrays.copyOfRange(arguments, argsIncluded, arguments.length);
 
                     if (realArgs.length < cmd.getMinArguments() || realArgs.length > cmd.getMaxArguments()) {
                         displayCommandHelp(cmd, sender);
@@ -121,7 +121,21 @@ public final class CommandManager {
                         return true;
                     }
 
-                    cmd.execute(sender, label, realArgs);
+                    if (cmd.dependsOnAnotherThread()) {
+
+                        plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
+
+                            @Override
+                            public void run()
+                            {
+                                cmd.execute(sender, label, realArgs);
+                            }
+
+                        });
+                    } else {
+                        cmd.execute(sender, label, realArgs);
+                    }
+
                     return true;
                 }
             }

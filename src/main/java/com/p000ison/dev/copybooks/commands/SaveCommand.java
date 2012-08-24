@@ -56,8 +56,11 @@ public class SaveCommand extends GenericCommand {
                 try {
                     book = new Book(player.getItemInHand(), player.getName());
                 } catch (InvalidBookException e) {
-                    player.sendMessage(ChatColor.RED + "Failed to create book!");
+                    player.sendMessage(ChatColor.RED + plugin.getTranslation("book.create.failed"));
                 }
+            } else {
+                sender.sendMessage(ChatColor.RED + plugin.getTranslation("only.players"));
+                return;
             }
 
         } else if (mode.equals("id")) {
@@ -66,17 +69,17 @@ public class SaveCommand extends GenericCommand {
             try {
                 id = Long.parseLong(args[3]);
             } catch (NumberFormatException e) {
-                sender.sendMessage(ChatColor.RED + "Failed to parse id!");
+                sender.sendMessage(ChatColor.RED + plugin.getTranslation("book.id.failed"));
                 return;
             }
 
             book = plugin.getStorageManager().retrieveBook(id);
         } else {
-            sender.sendMessage(ChatColor.RED + "Mode not found!");
+            sender.sendMessage(ChatColor.RED + plugin.getTranslation("mode.not.found"));
         }
 
         if (book == null) {
-            sender.sendMessage(ChatColor.RED + "Book not found!");
+            sender.sendMessage(ChatColor.RED + plugin.getTranslation("book.not.found"));
             return;
         }
 
@@ -84,7 +87,7 @@ public class SaveCommand extends GenericCommand {
 
         if (!dir.exists()) {
             if (!dir.mkdir()) {
-                sender.sendMessage(ChatColor.RED + "Failed to create directory!");
+                sender.sendMessage(ChatColor.RED + plugin.getTranslation("file.directory.create.failed"));
                 return;
             }
         }
@@ -96,10 +99,12 @@ public class SaveCommand extends GenericCommand {
             File file = new File(dir, fileName + ".book");
 
             if (file.isDirectory()) {
+                sender.sendMessage(ChatColor.RED + plugin.getTranslation("file.failed.is.directory"));
                 return;
             }
 
             if (file.exists()) {
+                sender.sendMessage(ChatColor.RED + plugin.getTranslation("file.exists.already"));
                 return;
             }
 
@@ -113,20 +118,25 @@ public class SaveCommand extends GenericCommand {
             File file = new File(dir, fileName + ".txt");
 
             if (file.isDirectory()) {
+                sender.sendMessage(ChatColor.RED + plugin.getTranslation("file.failed.is.directory"));
                 return;
             }
 
             if (file.exists()) {
+                sender.sendMessage(ChatColor.RED + plugin.getTranslation("file.exists.already"));
                 return;
             }
 
             try {
                 writeBook(book.getPages(), new FileWriter(file));
             } catch (IOException e) {
-                sender.sendMessage(ChatColor.RED + "Failed at saving file!");
+                sender.sendMessage(ChatColor.RED + plugin.getTranslation("file.failed.at.saving"));
             }
         } else {
-            sender.sendMessage(ChatColor.RED + "Format not found!");
+            sender.sendMessage(ChatColor.RED + plugin.getTranslation("format.not.found"));
+            return;
         }
+
+        sender.sendMessage(ChatColor.GREEN + plugin.getTranslation("book.successfully.saved"));
     }
 }

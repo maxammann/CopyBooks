@@ -11,6 +11,7 @@
 package com.p000ison.dev.copybooks.managers;
 
 import com.p000ison.dev.copybooks.CopyBooks;
+import com.p000ison.dev.copybooks.api.WrittenBook;
 import com.p000ison.dev.copybooks.objects.BasicBook;
 import com.p000ison.dev.copybooks.objects.Book;
 import com.p000ison.dev.copybooks.storage.DBCore;
@@ -146,7 +147,7 @@ public final class StorageManager {
 //        }
 //    }
 
-    public void insertBook(String title, String author, List<String> pages, String pusher)
+    public synchronized void insertBook(String title, String author, List<String> pages, String pusher)
     {
         try {
             insertBook.setString(1, title);
@@ -159,7 +160,12 @@ public final class StorageManager {
         }
     }
 
-    public void insertBook(Book book, String pusher)
+    public void insertBook(Book book)
+    {
+        insertBook(book.getTitle(), book.getAuthor(), book.getPages(), book.getCreator());
+    }
+
+    public void insertBook(WrittenBook book, String pusher)
     {
         insertBook(book.getTitle(), book.getAuthor(), book.getPages(), pusher);
     }

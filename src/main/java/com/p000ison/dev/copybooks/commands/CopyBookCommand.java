@@ -24,6 +24,7 @@ import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.api.InvalidBookException;
 import com.p000ison.dev.copybooks.objects.Book;
 import com.p000ison.dev.copybooks.objects.GenericCommand;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -51,13 +52,8 @@ public class CopyBookCommand extends GenericCommand {
             Player player = (Player) sender;
             ItemStack item = player.getItemInHand();
 
-            if (item == null) {
-                player.sendMessage("Please hold a written book!");
-                return;
-            }
-
-            if (!item.getType().equals(Material.WRITTEN_BOOK)) {
-                player.sendMessage("Please hold a written book!");
+            if (item == null || !item.getType().equals(Material.WRITTEN_BOOK)) {
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("book.not.written"));
                 return;
             }
 
@@ -72,9 +68,9 @@ public class CopyBookCommand extends GenericCommand {
 
             plugin.getStorageManager().insertBook(book, player.getName());
 
-            sender.sendMessage(String.format("You copied the book %s from %s", book.getTitle(), book.getAuthor()));
+            sender.sendMessage(String.format(ChatColor.GREEN + plugin.getTranslation("book.copied"), book.getTitle(), book.getAuthor()));
         } else {
-            sender.sendMessage(plugin.getTranslation("only.player"));
+            sender.sendMessage(ChatColor.RED + plugin.getTranslation("only.players"));
         }
     }
 }

@@ -13,6 +13,7 @@ package com.p000ison.dev.copybooks.commands;
 import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.objects.Command;
 import com.p000ison.dev.copybooks.objects.GenericCommand;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class HelpCommand extends GenericCommand {
             try {
                 page = Integer.parseInt(args[0]) - 1;
             } catch (NumberFormatException e) {
-                sender.sendMessage("Please enter a valid number!");
+                sender.sendMessage(ChatColor.RED + plugin.getTranslation("failed.parsing.number"));
             }
         }
 
@@ -93,12 +94,10 @@ public class HelpCommand extends GenericCommand {
             for (String usage : cmd.getUsages()) {
                 menu.append("   §b").append(usage).append('\n');
             }
-
         }
-        sender.sendMessage("§7CopyBooks" + " §8<" + (page + 1) + "/" + numPages);
+
+        sender.sendMessage("§7CopyBooks  " + " §8<" + (page + 1) + "/" + numPages + ">");
         sender.sendMessage(menu.toString());
-
-
     }
 }
 

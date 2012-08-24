@@ -65,10 +65,12 @@ public class LoadCommand extends GenericCommand {
                 File file = new File(new File(plugin.getDataFolder(), "saves"), fileName + ".book");
 
                 if (file.isDirectory()) {
+                    sender.sendMessage(ChatColor.RED + plugin.getTranslation("file.failed.is.directory"));
                     return;
                 }
 
                 if (!file.exists()) {
+                    sender.sendMessage(ChatColor.RED + plugin.getTranslation("file.not.exists"));
                     return;
                 }
 
@@ -82,10 +84,12 @@ public class LoadCommand extends GenericCommand {
                 File file = new File(new File(plugin.getDataFolder(), "saves"), fileName + ".txt");
 
                 if (file.isDirectory()) {
+                    sender.sendMessage(ChatColor.RED + plugin.getTranslation("file.failed.is.directory"));
                     return;
                 }
 
                 if (!file.exists()) {
+                    sender.sendMessage(ChatColor.RED + plugin.getTranslation("file.not.exists"));
                     return;
                 }
 
@@ -97,7 +101,7 @@ public class LoadCommand extends GenericCommand {
                     title = args[2];
                     author = args[3];
                 } else {
-                    sender.sendMessage("Invalid parameters!");
+                    sender.sendMessage(ChatColor.RED + plugin.getTranslation("invalid.parameters"));
                     return;
                 }
 
@@ -106,32 +110,34 @@ public class LoadCommand extends GenericCommand {
                 }
 
                 try {
-                    if (mode == null || mode.equalsIgnoreCase("lineByLine") || mode.equalsIgnoreCase("lbl")) {
+                    if (mode == null || mode.equalsIgnoreCase(plugin.getTranslation("lineByLine.mode")) || mode.equalsIgnoreCase("lbl")) {
                         book = new CraftWrittenBook(title, author, readBook(new BufferedReader(new FileReader(file))));
-                    } else if (mode.equalsIgnoreCase("noorder")) {
+                    } else if (mode.equalsIgnoreCase(plugin.getTranslation("no.order.mode"))) {
                         book = new CraftWrittenBook(title, author, readUnformattedBook(new FileReader(file)));
                     } else {
-                        player.sendMessage(ChatColor.RED + "Mode not found!");
+                        player.sendMessage(ChatColor.RED + plugin.getTranslation("mode.not.found"));
                     }
                 } catch (IOException e) {
-                    sender.sendMessage(ChatColor.RED + "Failed at reading file!");
+                    sender.sendMessage(ChatColor.RED + plugin.getTranslation("failed.reading.file"));
                     return;
                 } catch (InvalidBookException e) {
-                    sender.sendMessage(ChatColor.RED + "Failed to create book!");
+                    sender.sendMessage(ChatColor.RED + plugin.getTranslation("book.create.failed"));
                     return;
                 }
 
             } else {
-                player.sendMessage(ChatColor.RED + "Format not found!");
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("book.create.failed"));
                 return;
             }
 
             try {
                 InventoryHelper.add(player.getInventory(), book.toItemStack(1));
-                sender.sendMessage("Loaded book!");
+                sender.sendMessage(ChatColor.GREEN + plugin.getTranslation("book.loaded"));
             } catch (InvalidBookException e) {
-                sender.sendMessage(ChatColor.RED + "Failed to create book!");
+                sender.sendMessage(ChatColor.RED + plugin.getTranslation("book.create.failed"));
             }
+        } else {
+            sender.sendMessage(ChatColor.RED + plugin.getTranslation("only.players"));
         }
     }
 }

@@ -16,6 +16,7 @@ import com.p000ison.dev.copybooks.objects.Book;
 import com.p000ison.dev.copybooks.objects.GenericCommand;
 import com.p000ison.dev.copybooks.objects.Transaction;
 import com.p000ison.dev.copybooks.util.InventoryHelper;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -41,21 +42,21 @@ public class AcceptCommand extends GenericCommand {
             Transaction transaction = plugin.getEconomyManager().getTransactionByOpponent(player.getName());
 
             if (transaction == null) {
-                player.sendMessage("No transaction found!");
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("no.transaction.found"));
                 return;
             }
 
             Player requester = plugin.getServer().getPlayerExact(transaction.getRequester());
 
             if (requester == null) {
-                player.sendMessage("The requester is no longer online!");
+                player.sendMessage(String.format(plugin.getTranslation("requester.no.long.online"), transaction.getRequester()));
                 plugin.getEconomyManager().cancelTransactionByOpponent(player.getName());
                 return;
             }
 
             if (!plugin.getEconomyManager().checkTransaction(transaction)) {
-                player.sendMessage("You do not have enough money!");
-                requester.sendMessage(String.format("%s has not enough money!", player.getName()));
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("you.dont.have.enough.money"));
+                requester.sendMessage(String.format(ChatColor.RED + plugin.getTranslation("other.player.has.not.enough"), player.getName()));
                 return;
             }
 
@@ -63,8 +64,8 @@ public class AcceptCommand extends GenericCommand {
             Book book = plugin.getStorageManager().retrieveBook(transaction.getBookId());
 
             if (book == null) {
-                requester.sendMessage("Book not found!");
-                player.sendMessage("Book not found!");
+                requester.sendMessage(ChatColor.RED + plugin.getTranslation("book.not.found"));
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("book.not.found"));
                 return;
             }
 
@@ -77,7 +78,8 @@ public class AcceptCommand extends GenericCommand {
             }
 
             if (item == null) {
-                CopyBooks.debug("Failed to create ItemStack!");
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("book.create.failed"));
+                requester.sendMessage(ChatColor.RED + plugin.getTranslation("book.create.failed"));
                 return;
             }
 
@@ -86,26 +88,30 @@ public class AcceptCommand extends GenericCommand {
             int missing = InventoryHelper.contains(inv, Material.BOOK_AND_QUILL, transaction.getAmount(), (short) -1);
 
             if (missing != 0) {
-                player.sendMessage(String.format("%d books are missing!", missing));
-                requester.sendMessage(String.format("%s is missing %d books are missing!", player.getName(), missing));
+                player.sendMessage(ChatColor.RED + String.format(plugin.getTranslation("books.missing"), missing));
+                requester.sendMessage(ChatColor.RED + String.format(plugin.getTranslation("player.misses.books"), player.getName(), missing));
                 return;
             }
 
-            if (InventoryHelper.getAvailableSlots(inv, Material.BOOK_AND_QUILL, (short)-1, 1) != 0) {
-                player.sendMessage("Please make a bit space in your inventory!");
-                requester.sendMessage("Other player has not enough space in his inventory!");
+            InventoryHelper.remove(inv, Material.BOOK_AND_QUILL, transaction.getAmount(), (short) -1);
+
+            if (InventoryHelper.getAvailableSlots(inv, Material.BOOK_AND_QUILL, (short) -1, 1) != 0) {
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("not.enough.space"));
+                requester.sendMessage(ChatColor.RED + plugin.getTranslation("player.not.enough.space"));
                 return;
             }
+
+            InventoryHelper.add(inv, item);
 
             plugin.getEconomyManager().executeTransaction(transaction);
-            InventoryHelper.add(inv, item);
-            InventoryHelper.remove(inv, Material.BOOK_AND_QUILL, transaction.getAmount(), (short) -1);
+
             plugin.getEconomyManager().cancelTransactionByOpponent(player.getName());
 
-            requester.sendMessage("Transaction successfull!");
-            player.sendMessage("Transaction successfull!");
-        } else {
+            player.sendMessage(ChatColor.GREEN + plugin.getTranslation("transaction.successfully.you.got"));
+            requester.sendMessage(ChatColor.GREEN + plugin.getTranslation("transaction.successfully.you.sold"));
 
+        } else {
+            sender.sendMessage(ChatColor.RED + plugin.getTranslation("only.players"));
         }
     }
 }

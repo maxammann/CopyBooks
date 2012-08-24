@@ -24,6 +24,7 @@ import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.api.InvalidBookException;
 import com.p000ison.dev.copybooks.objects.Book;
 import com.p000ison.dev.copybooks.objects.GenericCommand;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -61,27 +62,28 @@ public class CreateBookCommand extends GenericCommand {
                 try {
                     amount = Integer.parseInt(args[1]);
                 } catch (NumberFormatException ex) {
-                    player.sendMessage("Please enter a numberal amount!");
+                    player.sendMessage(ChatColor.RED + plugin.getTranslation("book.id.failed"));
                     return;
                 }
             }
+
             int id;
             try {
                 id = Integer.parseInt(args[0]);
             } catch (NumberFormatException ex) {
-                player.sendMessage("Please enter a numberal id!");
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("book.amount.failed"));
                 return;
             }
 
             Book book = plugin.getStorageManager().retrieveBook(id);
 
             if (book == null) {
-                player.sendMessage("Book not found!");
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("book.not.found"));
                 return;
             }
 
             if (!Book.hasPermission(book.getCreator(), player)) {
-                player.sendMessage("You dont have permisson for this boook!");
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("permission.not.for.this.book"));
                 return;
             }
 
@@ -96,9 +98,9 @@ public class CreateBookCommand extends GenericCommand {
             player.getInventory().addItem(bookItem);
             player.updateInventory();
 
-            sender.sendMessage(String.format("You got %s book with the id %s", amount, id));
+            sender.sendMessage(String.format(plugin.getTranslation("book.created"), book.getTitle(), book.getAuthor(), id));
         } else {
-            sender.sendMessage(plugin.getTranslation("only.player"));
+            sender.sendMessage(ChatColor.RED + plugin.getTranslation("only.players"));
         }
     }
 }

@@ -23,6 +23,7 @@ public abstract class GenericCommand implements Command {
     private String[] identifiers;
     private String[] usages;
     private int maxArgs = 0, minArgs = 0;
+    private boolean dependsAnotherThread = false;
     protected CopyBooks plugin;
 
     public GenericCommand(CopyBooks plugin, String name)
@@ -30,6 +31,19 @@ public abstract class GenericCommand implements Command {
         this.plugin = plugin;
         this.name = name;
     }
+
+    @Override
+    public boolean dependsOnAnotherThread()
+    {
+        return dependsAnotherThread;
+    }
+
+    @Override
+    public void dependAnotherThread(boolean depends)
+    {
+        this.dependsAnotherThread = depends;
+    }
+
 
     @Override
     public abstract void execute(CommandSender sender, String label, String[] args);

@@ -59,7 +59,6 @@ public class CBBlockListener implements Listener {
         org.bukkit.material.Dispenser matDispenser = (org.bukkit.material.Dispenser) block.getState().getData();
 
         Block signBlock = block.getRelative(matDispenser.getFacing().getOppositeFace());
-        System.out.println(signBlock.getType());
 
         BlockState signState = signBlock.getState();
 

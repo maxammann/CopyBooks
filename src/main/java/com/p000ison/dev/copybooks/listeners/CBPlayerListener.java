@@ -38,6 +38,7 @@ import com.p000ison.dev.copybooks.objects.Transaction;
 import com.p000ison.dev.copybooks.util.Helper;
 import com.p000ison.dev.copybooks.util.InventoryHelper;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -109,7 +110,7 @@ public class CBPlayerListener implements Listener {
                 if (lines[0].equalsIgnoreCase(ChatColor.GREEN + "[CopyBooks]")) {
 
                     if (!player.hasPermission("cb.signs.unlimited")) {
-                        player.sendMessage("You dont have permission!");
+                        player.sendMessage(ChatColor.RED + plugin.getTranslation("no.permission"));
                         return;
                     }
 
@@ -147,7 +148,7 @@ public class CBPlayerListener implements Listener {
                     }
 
                     if (!player.hasPermission("cb.signs.buy")) {
-                        player.sendMessage("You dont have permission!");
+                        player.sendMessage(ChatColor.RED + plugin.getTranslation("no.permission"));
                         return;
                     }
 
@@ -155,7 +156,7 @@ public class CBPlayerListener implements Listener {
                     Transaction transaction = createTransactionFromString(lines, player.getName());
 
                     if (transaction == null) {
-                        player.sendMessage("Failed to create the transaction!");
+                        player.sendMessage(ChatColor.RED + plugin.getTranslation("invalid.sign"));
                         return;
                     }
 
@@ -163,21 +164,40 @@ public class CBPlayerListener implements Listener {
                     Book book = plugin.getStorageManager().retrieveBook(transaction.getBookId());
 
                     if (book == null) {
-                        player.sendMessage("Failed to get the book!");
+                        player.sendMessage(ChatColor.RED + plugin.getTranslation("book.not.found"));
                         return;
                     }
 
-                    if (!plugin.getEconomyManager().executeTransaction(transaction)) {
-                        player.sendMessage("You dont have enough money!");
+                    if (!plugin.getEconomyManager().checkTransaction(transaction)) {
+                        player.sendMessage(ChatColor.RED + plugin.getTranslation("you.dont.have.enough.money"));
+                        return;
+                    }
+
+                    Inventory inv = player.getInventory();
+
+                    int missing = InventoryHelper.contains(inv, Material.BOOK_AND_QUILL, transaction.getAmount(), (short) -1);
+
+                    if (missing != 0) {
+                        player.sendMessage(ChatColor.RED + String.format(plugin.getTranslation("books.missing"), missing));
+                        return;
+                    }
+
+                    InventoryHelper.remove(inv, Material.BOOK_AND_QUILL, transaction.getAmount(), (short) -1);
+
+                    if (InventoryHelper.getAvailableSlots(inv, Material.BOOK_AND_QUILL, (short) -1, 1) != 0) {
+                        player.sendMessage(ChatColor.RED + plugin.getTranslation("not.enough.space"));
                         return;
                     }
 
                     try {
-                        player.sendMessage("bought!" + book.getTitle());
-                        InventoryHelper.add(player.getInventory(), book.toItemStack(transaction.getAmount()));
+                        InventoryHelper.add(inv, book.toItemStack(transaction.getAmount()));
                     } catch (InvalidBookException e) {
                         CopyBooks.debug(null, e);
+                        return;
                     }
+
+                    player.sendMessage(String.format(plugin.getTranslation("book.bought"), book.getTitle(), transaction.getRequester()));
+
                 }
             }
         }
@@ -188,13 +208,7 @@ public class CBPlayerListener implements Listener {
     {
         char firstChar = lines[1].charAt(0);
         String requester = Helper.removeColors(lines[0] + (firstChar == ' ' ? "" : firstChar));
-        System.out.println(requester);
-        System.out.println(requester.toCharArray()[requester.length() - 1]);
-        System.out.println(requester.toCharArray()[requester.length() - 1] == ' ');
-//        char[] chars = lines[2].toCharArray();
 
-//        int amount = Helper.getAmontFromSign(chars);
-//        long id = Helper.getIdFromSign(chars);
         String[] idAndAmount = lines[2].split(":");
         long id = Long.parseLong(idAndAmount[0]);
         int amount = Integer.parseInt(idAndAmount[1]);
@@ -217,7 +231,7 @@ public class CBPlayerListener implements Listener {
             }
 
             if (!cmd.hasPermission(player)) {
-                player.sendMessage("You dont have permission!");
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("no.permission"));
                 return;
             }
 
@@ -256,13 +270,13 @@ public class CBPlayerListener implements Listener {
 
             if (!player.hasPermission("cb.signs.place-unlimited")) {
                 event.setCancelled(true);
-                player.sendMessage("You are not allowed to place this sign!");
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("no.permission"));
                 return;
             }
 
             if (!lines[1].matches("[0-9]+")) {
                 event.setCancelled(true);
-                player.sendMessage("The second line must contain the id of the book!");
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("second.line.id"));
                 return;
             }
 
@@ -271,6 +285,7 @@ public class CBPlayerListener implements Listener {
         } else {
             if (detectSign(lines)) {
                 if (!player.hasPermission("cb.signs.place-economy")) {
+                    player.sendMessage(ChatColor.RED + plugin.getTranslation("no.permission"));
                     event.setCancelled(true);
                     return;
                 }
@@ -278,12 +293,12 @@ public class CBPlayerListener implements Listener {
                 Book book = plugin.getStorageManager().retrieveBook(Helper.getIdFromSign(lines[2].toCharArray()));
 
                 if (book == null) {
-                    player.sendMessage("The book doesnt exist!");
+                    player.sendMessage(ChatColor.RED + plugin.getTranslation("book.not.found"));
                     return;
                 }
 
                 if (!Book.hasPermission(book.getCreator(), player)) {
-                    player.sendMessage("You dont have permission to this book!");
+                    player.sendMessage(ChatColor.RED + plugin.getTranslation("permission.not.for.this.book"));
                     return;
                 }
 
@@ -301,12 +316,12 @@ public class CBPlayerListener implements Listener {
                     }
 
                 } else if (!lines[0].isEmpty()) {
-                    //check for admin shop
-                    if (lines[0].equals("[AdminShop]") && !player.hasPermission("cb.admin.adminshop")) {
-                        player.sendMessage("You dont have permission!");
-                        event.setCancelled(false);
-                        return;
-                    }
+//                    //check for admin shop
+//                    if (lines[0].equals("[AdminShop]") && !player.hasPermission("cb.admin.adminshop")) {
+//                        player.sendMessage(ChatColor.RED + plugin.getTranslation("no.permission"));
+//                        event.setCancelled(false);
+//                        return;
+//                    }
 
                     //if the second line is not empty we have to care about a char in the second line
                     if (!lines[1].isEmpty()) {
@@ -318,7 +333,7 @@ public class CBPlayerListener implements Listener {
                     String wholeName = (charToAdd == ' ' ? "" : charToAdd) + lines[0];
 
                     if (!wholeName.equals(player.getName()) && !player.hasPermission("cb.admin.others")) {
-                        player.sendMessage("You dont have permission!");
+                        player.sendMessage(ChatColor.RED + plugin.getTranslation("no.permission"));
                         event.setCancelled(false);
                         return;
                     }
@@ -329,20 +344,14 @@ public class CBPlayerListener implements Listener {
                 //check for other lines
                 String[] idAndAmount = lines[2].split(":");
 
-                if (idAndAmount.length != 2) {
-                    player.sendMessage("Invalid id or/and amount! 1");
+                if (idAndAmount.length != 2 || !idAndAmount[0].matches("[0-9]+") || !idAndAmount[1].matches("[0-9]+")) {
+                    player.sendMessage(ChatColor.RED + plugin.getTranslation("invalid.id.or.and.amount"));
                     event.setCancelled(true);
                     return;
                 }
 
-                if (!idAndAmount[0].matches("[0-9]+") || !idAndAmount[1].matches("[0-9]+")) {
-                    player.sendMessage("Invalid id or/and amount! 2");
-                    event.setCancelled(true);
-                    return;
-                }
-
-                if (!lines[3].matches("[0-9]+")) {
-                    player.sendMessage("Invalid price!");
+                if (!Helper.isDecimal(lines[3])) {
+                    player.sendMessage(ChatColor.RED + plugin.getTranslation("price.number"));
                     event.setCancelled(true);
                     return;
                 }
@@ -350,7 +359,7 @@ public class CBPlayerListener implements Listener {
 
                 event.getBlock().getState().update();
 
-                player.sendMessage("CopyBooks economy sign created!");
+                player.sendMessage(ChatColor.GREEN + plugin.getTranslation("economy.sign.created"));
             }
         }
     }

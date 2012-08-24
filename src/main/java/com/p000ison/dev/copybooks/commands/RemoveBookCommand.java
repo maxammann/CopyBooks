@@ -23,6 +23,7 @@ package com.p000ison.dev.copybooks.commands;
 import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.objects.Book;
 import com.p000ison.dev.copybooks.objects.GenericCommand;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -48,26 +49,26 @@ public class RemoveBookCommand extends GenericCommand {
         try {
             id = Long.parseLong(args[0]);
         } catch (Exception e) {
-            sender.sendMessage("Please enter a number!");
+            sender.sendMessage(ChatColor.RED + plugin.getTranslation("book.id.failed"));
             return;
         }
 
         Book book = plugin.getStorageManager().retrieveBook(id);
 
         if (book == null) {
-            sender.sendMessage("Book not found!");
+            sender.sendMessage(ChatColor.RED + plugin.getTranslation("book.not.found"));
             return;
         }
 
         if (!Book.hasPermission(book.getCreator(), sender)) {
-            sender.sendMessage("You dont have permission for this book!");
+            sender.sendMessage(ChatColor.RED + plugin.getTranslation("permission.not.for.this.book"));
             return;
         }
 
         if (plugin.getStorageManager().deleteBookById(id)) {
-            sender.sendMessage("Book deleted!");
+            sender.sendMessage(ChatColor.GREEN + plugin.getTranslation("book.deleted"));
         } else {
-            sender.sendMessage("Book could not be deleted!");
+            sender.sendMessage(ChatColor.RED + plugin.getTranslation("book.failed.deleted"));
         }
     }
 }

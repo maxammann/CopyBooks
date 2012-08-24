@@ -24,6 +24,7 @@ import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.api.CraftWrittenBook;
 import com.p000ison.dev.copybooks.api.InvalidBookException;
 import com.p000ison.dev.copybooks.objects.GenericCommand;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -51,13 +52,8 @@ public class UnsignBookCommand extends GenericCommand {
             Player player = (Player) sender;
             ItemStack item = player.getItemInHand();
 
-            if (item == null) {
-                player.sendMessage("You have to hold a written book in your hands!");
-                return;
-            }
-
-            if (!item.getType().equals(Material.WRITTEN_BOOK)) {
-                player.sendMessage("You have to hold a written book in your hands!");
+            if (item == null || !item.getType().equals(Material.WRITTEN_BOOK)) {
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("book.not.written"));
                 return;
             }
 
@@ -65,18 +61,19 @@ public class UnsignBookCommand extends GenericCommand {
                 CraftWrittenBook book = new CraftWrittenBook(item);
 
                 if (!book.unsign()) {
-                    player.sendMessage("Book is not signed!");
+                    player.sendMessage(ChatColor.RED + plugin.getTranslation("book.not.signed"));
                     return;
                 }
 
                 player.setItemInHand(book.toItemStack(item.getAmount()));
             } catch (InvalidBookException e) {
                 CopyBooks.debug(null, e);
+                return;
             }
 
-            sender.sendMessage(String.format("You unsigned the book!"));
+            sender.sendMessage(ChatColor.RED + plugin.getTranslation("book.unsigned"));
         } else {
-            sender.sendMessage(plugin.getTranslation("only.player"));
+            sender.sendMessage(ChatColor.RED + plugin.getTranslation("only.players"));
         }
     }
 }

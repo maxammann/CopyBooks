@@ -48,6 +48,11 @@ public class Helper {
         return json.toString();
     }
 
+    public static boolean isDecimal(String test)
+    {
+        return test.matches("\\d+(\\.\\d{1,6})?");
+    }
+
     public static String[] splitByLength(String s, int chunkSize)
     {
         int arraySize = (int) Math.ceil((double) s.length() / chunkSize);
