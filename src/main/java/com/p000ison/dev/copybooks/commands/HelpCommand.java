@@ -31,7 +31,7 @@ public class HelpCommand extends GenericCommand {
     {
         super(plugin, name);
         this.plugin = plugin;
-        setUsages("/cb help §8[page#]");
+        setUsages("/cb help §8[page#] §f- Shows the help");
         setArgumentRange(0, 1);
         setIdentifiers("cb", "copybooks", "help");
         setPermissions("cb.commands.help");

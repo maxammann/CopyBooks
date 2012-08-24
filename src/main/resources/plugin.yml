@@ -28,7 +28,10 @@ permissions:
       cb.admin.save: true
       cb.admin.load: true
       cb.commands.*: true
+      cb.books.own: true
+      cb.books.*: true
   cb.user:
+    default: false
     children:
       cb.command.help: true
       cb.command.list: true
@@ -39,6 +42,7 @@ permissions:
       cb.signs.buy: true
       cb.signs.place-economy: true
       cb.commands.*: true
+      cb.books.own: true
   cb.commands.*:
     default: false
   cb.command.help:

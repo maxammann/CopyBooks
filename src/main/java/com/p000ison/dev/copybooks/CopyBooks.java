@@ -50,6 +50,33 @@ public class CopyBooks extends JavaPlugin {
     private EconomyManager economyManager;
     private static Permission permission = null;
 
+
+    @Override
+    public void onEnable()
+    {
+        logger = getLogger();
+
+        PluginManager pm = getServer().getPluginManager();
+
+        language = ResourceBundle.getBundle("languages.lang");
+
+        setupManagers();
+
+        pm.registerEvents(new CBPlayerListener(this), this);
+//        pm.registerEvents(new CBBlockListener(this), this);
+        super.onEnable();
+    }
+
+    @Override
+    public void onDisable()
+    {
+        language = null;
+        getServer().getScheduler().cancelTasks(this);
+        storageManager.closeConnection();
+        storageManager.clearCache();
+        super.onDisable();
+    }
+
     public static void debug(String msg, Throwable ex)
     {
         if (logger != null) {
@@ -72,30 +99,6 @@ public class CopyBooks extends JavaPlugin {
     public static Permission getPermission()
     {
         return permission;
-    }
-
-    @Override
-    public void onEnable()
-    {
-        logger = getLogger();
-
-        PluginManager pm = getServer().getPluginManager();
-
-        language = ResourceBundle.getBundle("languages.lang");
-
-        setupManagers();
-
-        pm.registerEvents(new CBPlayerListener(this), this);
-//        pm.registerEvents(new CBBlockListener(this), this);
-        super.onEnable();
-    }
-
-    @Override
-    public void onDisable()
-    {
-        language = null;
-        storageManager.closeConnection();
-        super.onDisable();
     }
 
     private void setupManagers()
@@ -129,34 +132,17 @@ public class CopyBooks extends JavaPlugin {
         return (getPermission() != null);
     }
 
-//    public static void main(String[] args)
-//    {
-//
-//        String test = "aweifjewlktnsklfd";
-//
-//        char[] oldChars = test.toCharArray();
-//        int length = oldChars.length;
-//
-//        char[] newChars = new char[length];
-//        for (int i = 0; i < length; i++) {
-//            char c = (char) (oldChars[i] - 32);
-//            newChars[i] = c;
-//        }
-//
-//        System.out.println(String.valueOf(newChars));
-//    }
-
-    public SettingsManager getSettingsManager()
-    {
-        return settingsManager;
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         commandManager.executeAll(sender, command, label, args);
         return true;
 
+    }
+
+    public SettingsManager getSettingsManager()
+    {
+        return settingsManager;
     }
 
     public CommandManager getCommandManager()

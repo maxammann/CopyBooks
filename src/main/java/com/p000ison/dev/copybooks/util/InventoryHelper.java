@@ -42,12 +42,12 @@ public class InventoryHelper {
 
             if (remove <= 0) {
                 removed += Math.abs(remove);
-                contents[i] = null;
+                inventory.setItem(i, null);
             } else {
                 item.setAmount(remove);
             }
         }
-        return removed;
+        return Math.abs(removed);
     }
 
     /**
@@ -178,6 +178,6 @@ public class InventoryHelper {
 
             searchAmount += item.getAmount();
         }
-        return searchAmount - amount;
+        return Math.abs(searchAmount - amount);
     }
 }

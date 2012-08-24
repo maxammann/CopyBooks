@@ -184,13 +184,9 @@ public class CBPlayerListener implements Listener {
 
                     InventoryHelper.remove(inv, Material.BOOK_AND_QUILL, transaction.getAmount(), (short) -1);
 
-                    if (InventoryHelper.getAvailableSlots(inv, Material.BOOK_AND_QUILL, (short) -1, 1) != 0) {
-                        player.sendMessage(ChatColor.RED + plugin.getTranslation("not.enough.space"));
-                        return;
-                    }
-
                     try {
                         InventoryHelper.add(inv, book.toItemStack(transaction.getAmount()));
+                        player.updateInventory();
                     } catch (InvalidBookException e) {
                         CopyBooks.debug(null, e);
                         return;
@@ -283,7 +279,7 @@ public class CBPlayerListener implements Listener {
             player.sendMessage("CopyBooks created!");
             event.setLine(0, ChatColor.GREEN + "[CopyBooks]");
         } else {
-            if (detectSign(lines)) {
+            if (detectSignPlace(lines)) {
                 if (!player.hasPermission("cb.signs.place-economy")) {
                     player.sendMessage(ChatColor.RED + plugin.getTranslation("no.permission"));
                     event.setCancelled(true);
@@ -401,8 +397,13 @@ public class CBPlayerListener implements Listener {
 //        }
 //    }
 
+    public static boolean detectSignPlace(String[] lines)
+    {
+        return lines[2].contains(":") && Helper.isDecimal(lines[3]);
+    }
+
     public static boolean detectSign(String[] lines)
     {
-        return lines[2].contains(":") && lines[3].matches("[0-9]+");
+        return lines[1].contains("[") && lines[1].contains("]") && lines[2].contains(":") && Helper.isDecimal(lines[3]);
     }
 }

@@ -38,7 +38,7 @@ public class CreateBookCommand extends GenericCommand {
     {
         super(plugin, name);
         setPermissions("cb.command.create");
-        setUsages("/cb create - Creates a book from a id");
+        setUsages("/cb create §f- Creates a book from a id");
         setArgumentRange(1, 2);
         setIdentifiers("create", "c");
         setPermissions("cb.admin.create");

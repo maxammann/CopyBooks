@@ -32,7 +32,7 @@ public class DownloadCommand extends GenericCommand {
         super(plugin, name);
         setArgumentRange(3, 5);
         setIdentifiers("download", "dl");
-        setUsages("/cb dl <default/pastebin> <url/pasteid> <id> [title] [author] - Downloads a book form a webpage.");
+        setUsages("/cb dl <default/pastebin> <url/pasteid> <id> [title] [author] §f- Downloads a book form a webpage.");
         setPermissions("cb.admin.download");
         dependAnotherThread(true);
     }

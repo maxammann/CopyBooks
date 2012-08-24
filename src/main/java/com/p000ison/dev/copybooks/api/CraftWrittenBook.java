@@ -42,7 +42,7 @@ public class CraftWrittenBook implements WrittenBook {
             throw new InvalidBookException("The book must be a written book!");
         }
 
-        tag = itemStack.getHandle().getTag();
+        tag = itemStack.getHandle().tag;
 
         if (tag == null) {
             tag = new NBTTagCompound();
@@ -109,7 +109,7 @@ public class CraftWrittenBook implements WrittenBook {
     @Override
     public boolean unsign()
     {
-        if (tag.get("author") == null || tag.getString("title") == null) {
+        if (!tag.hasKey("author") || !tag.hasKey("title")) {
             return false;
         }
 

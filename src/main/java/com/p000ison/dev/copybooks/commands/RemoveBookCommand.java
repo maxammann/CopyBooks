@@ -35,7 +35,7 @@ public class RemoveBookCommand extends GenericCommand {
     {
         super(plugin, name);
         setPermissions("cb.command.remove");
-        setUsages("/cb remove [id] - Removes a book");
+        setUsages("/cb remove [id] §f- Removes a book");
         setArgumentRange(1, 1);
         setIdentifiers("remove", "rm");
         setPermissions("cb.commands.remove");

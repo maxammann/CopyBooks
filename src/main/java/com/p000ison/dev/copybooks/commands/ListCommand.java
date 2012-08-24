@@ -40,7 +40,7 @@ public class ListCommand extends GenericCommand {
     {
         super(plugin, name);
         setPermissions("cb.command.list");
-        setUsages("/cb list [own/page]- Lists all books");
+        setUsages("/cb list [own/page] §f- Lists all books");
         setArgumentRange(0, 1);
         setIdentifiers("list");
     }
@@ -61,10 +61,16 @@ public class ListCommand extends GenericCommand {
 
         String permCreator;
 
-        if (!isOwn && sender.hasPermission("cb.books.*")) {
-            permCreator = null;
-        } else if (sender.hasPermission("cb.books.own") || isOwn) {
+        if (sender.hasPermission("cb.books.*")) {
+            if (!isOwn) {
+                permCreator = null;
+            } else {
+                permCreator = sender.getName();
+            }
+            System.out.println("all");
+        } else if (sender.hasPermission("cb.books.own")) {
             permCreator = sender.getName();
+            System.out.println("own");
         } else {
             sender.sendMessage(ChatColor.RED + "You don't have permission for any book!");
             return;

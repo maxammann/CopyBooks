@@ -86,6 +86,11 @@ public final class StorageManager {
         prepareStatements();
     }
 
+    public void clearCache()
+    {
+        cache.clear();
+    }
+
     public void prepareStatements()
     {
         //prepare here
@@ -215,11 +220,11 @@ public final class StorageManager {
             if (creator == null) {
                 retrieveBooks.setInt(1, min);
                 retrieveBooks.setInt(2, max);
-                res = retrieveBookById.executeQuery();
+                res = retrieveBooks.executeQuery();
             } else {
-                retrieveBooksByOwner.setInt(1, min);
-                retrieveBooksByOwner.setInt(2, max);
-                retrieveBooksByOwner.setString(3, creator);
+                retrieveBooksByOwner.setString(1, creator);
+                retrieveBooksByOwner.setInt(2, min);
+                retrieveBooksByOwner.setInt(3, max);
                 res = retrieveBooksByOwner.executeQuery();
             }
 

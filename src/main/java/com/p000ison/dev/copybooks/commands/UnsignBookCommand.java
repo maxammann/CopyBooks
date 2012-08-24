@@ -39,7 +39,7 @@ public class UnsignBookCommand extends GenericCommand {
     {
         super(plugin, name);
         setPermissions("cb.command.unsign");
-        setUsages("/cb unsign - Unsings a book");
+        setUsages("/cb unsign §f- Unsings a book");
         setArgumentRange(0, 0);
         setIdentifiers("unsign", "us");
         setPermissions("cb.admin.unsign");
@@ -65,13 +65,17 @@ public class UnsignBookCommand extends GenericCommand {
                     return;
                 }
 
-                player.setItemInHand(book.toItemStack(item.getAmount()));
+                ItemStack itemStack = book.toItemStack(item.getAmount());
+                itemStack.setTypeId(386);
+
+                player.setItemInHand(itemStack);
+                player.updateInventory();
             } catch (InvalidBookException e) {
                 CopyBooks.debug(null, e);
                 return;
             }
 
-            sender.sendMessage(ChatColor.RED + plugin.getTranslation("book.unsigned"));
+            sender.sendMessage(ChatColor.GREEN + plugin.getTranslation("book.unsigned"));
         } else {
             sender.sendMessage(ChatColor.RED + plugin.getTranslation("only.players"));
         }

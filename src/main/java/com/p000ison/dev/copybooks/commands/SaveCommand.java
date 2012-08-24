@@ -36,7 +36,7 @@ public class SaveCommand extends GenericCommand {
     {
         super(plugin, name);
         setArgumentRange(3, 4);
-        setUsages("/cb save <file> <format> <iih/id> [id]");
+        setUsages("/cb save <file> <format> <iih/id> [id] §f- Saves a book to a file");
         setPermissions("cb.commands.save");
         setIdentifiers("save");
         setPermissions("cb.admin.save");

@@ -39,7 +39,7 @@ public class CopyBookCommand extends GenericCommand {
     {
         super(plugin, name);
         setPermissions("cb.command.copy");
-        setUsages("/cb copy - Copy a book");
+        setUsages("/cb copy §f- Copy a book");
         setArgumentRange(0, 0);
         setIdentifiers("copy");
         setPermissions("cb.admin.copy");

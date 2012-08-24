@@ -24,7 +24,7 @@ public class SellCommand extends GenericCommand {
         super(plugin, name);
         setArgumentRange(3, 4);
         setIdentifiers("sell", "offer");
-        setUsages("/cb sell - Sell a book");
+        setUsages("/cb sell §f- Sells a book");
         setPermissions("cb.commands.sell");
     }
 

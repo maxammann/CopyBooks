@@ -44,7 +44,7 @@ public class LoadCommand extends GenericCommand {
     {
         super(plugin, name);
         setArgumentRange(2, 5);
-        setUsages("/cb load <file> <nbt/text> <title> <author> [mode]");
+        setUsages("/cb load <file> <nbt/text> <title> <author> [lineByline/noOrder] §f- Loads a book from a file");
         setPermissions("cb.commands.load");
         setIdentifiers("load");
         setPermissions("cb.admin.load");
