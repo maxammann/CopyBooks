@@ -175,14 +175,17 @@ public class CBPlayerListener implements Listener {
 
                     Inventory inv = player.getInventory();
 
-                    int missing = InventoryHelper.contains(inv, Material.BOOK_AND_QUILL, transaction.getAmount(), (short) -1);
+                    if (plugin.getSettingsManager().isNeedShopBooks()) {
+                        int missing = InventoryHelper.contains(inv, Material.BOOK_AND_QUILL, transaction.getAmount(), (short) -1);
 
-                    if (missing != 0) {
-                        player.sendMessage(ChatColor.RED + String.format(plugin.getTranslation("books.missing"), missing));
-                        return;
+                        if (missing != 0) {
+                            player.sendMessage(ChatColor.RED + String.format(plugin.getTranslation("books.missing"), missing));
+                            return;
+                        }
+
+                        InventoryHelper.remove(inv, Material.BOOK_AND_QUILL, transaction.getAmount(), (short) -1);
+
                     }
-
-                    InventoryHelper.remove(inv, Material.BOOK_AND_QUILL, transaction.getAmount(), (short) -1);
 
                     try {
                         InventoryHelper.add(inv, book.toItemStack(transaction.getAmount()));
@@ -247,7 +250,22 @@ public class CBPlayerListener implements Listener {
             }
 
             if (item != null) {
-                player.getInventory().addItem(item);
+                Inventory inv = player.getInventory();
+
+                if (plugin.getSettingsManager().isNeedCommandBooks()) {
+                    int missing = InventoryHelper.contains(inv, Material.BOOK_AND_QUILL, 1, (short) -1);
+
+                    if (missing != 0) {
+                        player.sendMessage(ChatColor.RED + String.format(plugin.getTranslation("books.missing"), missing));
+                        return;
+                    }
+
+                    InventoryHelper.remove(inv, Material.BOOK_AND_QUILL, 1, (short) -1);
+                }
+
+
+                InventoryHelper.add(inv, item);
+
                 if (cmd.getMessage() != null) {
                     player.sendMessage(cmd.getMessage());
                 }

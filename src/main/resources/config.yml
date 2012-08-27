@@ -16,9 +16,13 @@ commands:
 settings:
   only-on-first-join: true
   cache-size: 100
+creating:
+  need-books: true
 shop:
   need-books: true
 selling:
+  need-books: true
+commands:
   need-books: true
 sql:
   mysql: false

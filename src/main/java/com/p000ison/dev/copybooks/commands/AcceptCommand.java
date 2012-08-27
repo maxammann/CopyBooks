@@ -85,15 +85,18 @@ public class AcceptCommand extends GenericCommand {
 
             Inventory inv = player.getInventory();
 
-            int missing = InventoryHelper.contains(inv, Material.BOOK_AND_QUILL, transaction.getAmount(), (short) -1);
+            if (plugin.getSettingsManager().isNeedSellBooks()) {
+                int missing = InventoryHelper.contains(inv, Material.BOOK_AND_QUILL, transaction.getAmount(), (short) -1);
 
-            if (missing != 0) {
-                player.sendMessage(ChatColor.RED + String.format(plugin.getTranslation("books.missing"), missing));
-                requester.sendMessage(ChatColor.RED + String.format(plugin.getTranslation("player.misses.books"), player.getName(), missing));
-                return;
+                if (missing != 0) {
+                    player.sendMessage(ChatColor.RED + String.format(plugin.getTranslation("books.missing"), missing));
+                    requester.sendMessage(ChatColor.RED + String.format(plugin.getTranslation("player.misses.books"), player.getName(), missing));
+                    return;
+                }
+
+                InventoryHelper.remove(inv, Material.BOOK_AND_QUILL, transaction.getAmount(), (short) -1);
+
             }
-
-            InventoryHelper.remove(inv, Material.BOOK_AND_QUILL, transaction.getAmount(), (short) -1);
 
             if (InventoryHelper.getAvailableSlots(inv, Material.BOOK_AND_QUILL, (short) -1, 1) != 0) {
                 player.sendMessage(ChatColor.RED + plugin.getTranslation("not.enough.space"));

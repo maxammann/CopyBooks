@@ -24,9 +24,12 @@ import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.api.InvalidBookException;
 import com.p000ison.dev.copybooks.objects.Book;
 import com.p000ison.dev.copybooks.objects.GenericCommand;
+import com.p000ison.dev.copybooks.util.InventoryHelper;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -95,7 +98,28 @@ public class CreateBookCommand extends GenericCommand {
                 return;
             }
 
-            player.getInventory().addItem(bookItem);
+            Inventory inv = player.getInventory();
+
+            if (plugin.getSettingsManager().isNeedCreateBooks()) {
+
+                int missing = InventoryHelper.contains(inv, Material.BOOK_AND_QUILL, 1, (short) -1);
+
+                if (missing != 0) {
+                    player.sendMessage(ChatColor.RED + String.format(plugin.getTranslation("books.missing"), missing));
+                    return;
+                }
+
+                InventoryHelper.remove(inv, Material.BOOK_AND_QUILL, 1, (short) -1);
+
+            }
+
+            if (InventoryHelper.getAvailableSlots(inv, Material.BOOK_AND_QUILL, (short) -1, 1) != 0) {
+                player.sendMessage(ChatColor.RED + plugin.getTranslation("not.enough.space"));
+                return;
+            }
+
+            InventoryHelper.add(inv, item);
+
             player.updateInventory();
 
             sender.sendMessage(String.format(plugin.getTranslation("book.created"), book.getTitle(), book.getAuthor(), id));

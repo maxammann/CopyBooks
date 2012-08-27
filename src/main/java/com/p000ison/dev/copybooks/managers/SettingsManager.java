@@ -46,7 +46,7 @@ public class SettingsManager {
     private int port;
     private boolean onlyFirstJoin;
     private int cacheSize;
-    private boolean needSellBooks, needShopBooks;
+    private boolean needSellBooks, needShopBooks, needCreateBooks, needCommandBooks;
 
     public SettingsManager(CopyBooks plugin)
     {
@@ -70,6 +70,9 @@ public class SettingsManager {
         cacheSize = config.getInt("settings.cache-size");
         needSellBooks = config.getBoolean("selling.need-books");
         needShopBooks = config.getBoolean("shop.need-books");
+        needCreateBooks = config.getBoolean("creating.need-books");
+        needCommandBooks = config.getBoolean("commands.need-books");
+
         commands.clear();
 
         ConfigurationSection section = config.getConfigurationSection("commands");
@@ -160,5 +163,15 @@ public class SettingsManager {
     public boolean isNeedShopBooks()
     {
         return needShopBooks;
+    }
+
+    public boolean isNeedCreateBooks()
+    {
+        return needCreateBooks;
+    }
+
+    public boolean isNeedCommandBooks()
+    {
+        return needCommandBooks;
     }
 }
