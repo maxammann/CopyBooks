@@ -169,9 +169,8 @@
         </dependency>
         <dependency>
             <groupId>org.spout</groupId>
-            <artifactId>spoutnbt</artifactId>
-            <version>dev-SNAPSHOT</version>
-            <type>jar</type>
+            <artifactId>simplenbt</artifactId>
+            <version>1.0.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
