@@ -14,10 +14,11 @@ import com.p000ison.dev.copybooks.CopyBooks;
 import com.p000ison.dev.copybooks.api.CraftWrittenBook;
 import com.p000ison.dev.copybooks.api.InvalidBookException;
 import com.p000ison.dev.copybooks.api.WrittenBook;
+
+import org.spout.nbt.CompoundMap;
 import org.spout.nbt.CompoundTag;
 import org.spout.nbt.ListTag;
 import org.spout.nbt.StringTag;
-import org.spout.nbt.Tag;
 import org.spout.nbt.stream.NBTInputStream;
 import org.spout.nbt.stream.NBTOutputStream;
 
@@ -50,10 +51,10 @@ public final class BookIO {
         try {
             outputStream = new NBTOutputStream(fileOutputStream);
 
-            List<Tag> contents = new ArrayList<Tag>();
+            CompoundMap contents = new CompoundMap();
 
-            contents.add(new StringTag("title", book.getTitle()));
-            contents.add(new StringTag("author", book.getAuthor()));
+            contents.put(new StringTag("title", book.getTitle()));
+            contents.put(new StringTag("author", book.getAuthor()));
 
             List<StringTag> tagPages = new ArrayList<StringTag>();
 
@@ -63,7 +64,7 @@ public final class BookIO {
 
             ListTag<StringTag> pages = new ListTag<StringTag>("pages", StringTag.class, tagPages);
 
-            contents.add(pages);
+            contents.put(pages);
 
             CompoundTag root = new CompoundTag("Book", contents);
 
@@ -78,7 +79,8 @@ public final class BookIO {
         }
     }
 
-    public static WrittenBook readNBTBook(FileInputStream fileInputStream) throws IOException
+    @SuppressWarnings("unchecked")
+	public static WrittenBook readNBTBook(FileInputStream fileInputStream) throws IOException
     {
         NBTInputStream inputStream;
         try {
@@ -90,12 +92,14 @@ public final class BookIO {
             CompoundTag root = (CompoundTag) inputStream.readTag();
 
             if (root == null) {
+            	inputStream.close();
                 return null;
             }
 
-            List<Tag> contents = root.getValue();
+            CompoundMap contents = root.getValue();
 
             if (contents == null) {
+            	inputStream.close();
                 return null;
             }
 
